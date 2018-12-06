@@ -43,6 +43,7 @@ export class FuseNavigationComponent implements OnInit
     {
         // Load the navigation either from the input or from the service
         this.navigation = this.navigation || this._fuseNavigationService.getCurrentNavigation();
+        console.log(this.navigation);
 
         // Subscribe to the current navigation changes
         this._fuseNavigationService.onNavigationChanged

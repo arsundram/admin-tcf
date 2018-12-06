@@ -10,7 +10,7 @@
 
             <div class="title">LOGIN TO YOUR ACCOUNT</div>
 
-            <form name="loginForm" [formGroup]="loginForm" novalidate>
+            <form name="loginForm" [formGroup]="loginForm" novalidate (submit)="login()">
 
                 <mat-form-field>
                     <input matInput placeholder="Email" formControlName="email">
@@ -41,7 +41,10 @@
                         Forgot Password?
                     </a>
                 </div>
-
+                <mat-error
+                    *ngIf="backendError">
+                        {{backendError}}
+                </mat-error>
                 <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
                         [disabled]="loginForm.invalid">
                     LOGIN

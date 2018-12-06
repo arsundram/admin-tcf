@@ -219,7 +219,7 @@ export class FuseSidebarComponent implements OnInit, OnDestroy
             });
 
         // Register the sidebar
-        this._fuseSidebarService.register(this.name, this);
+         this._fuseSidebarService.register(this.name, this);
 
         // Setup visibility
         this._setupVisibility();

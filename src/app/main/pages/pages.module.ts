@@ -21,6 +21,7 @@ import { ProfileModule } from 'app/main/pages/profile/profile.module';
 import { SearchModule } from 'app/main/pages/search/search.module';
 import { FaqModule } from 'app/main/pages/faq/faq.module';
 import { KnowledgeBaseModule } from 'app/main/pages/knowledge-base/knowledge-base.module';
+import {EventModule} from './event/event.module';
 
 @NgModule({
     imports: [
@@ -63,8 +64,10 @@ import { KnowledgeBaseModule } from 'app/main/pages/knowledge-base/knowledge-bas
         FaqModule,
 
         // Knowledge base
-        KnowledgeBaseModule
-    ]
+        KnowledgeBaseModule,
+        EventModule
+    ],
+    declarations: [],
 })
 export class PagesModule
 {

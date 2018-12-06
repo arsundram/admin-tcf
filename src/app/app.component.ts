@@ -14,6 +14,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
+import {EventService} from '../@fuse/services/event.service';
 
 @Component({
     selector   : 'app',
@@ -48,17 +49,28 @@ export class AppComponent implements OnInit, OnDestroy
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _fuseTranslationLoaderService: FuseTranslationLoaderService,
         private _translateService: TranslateService,
-        private _platform: Platform
+        private _platform: Platform,
+        private event: EventService
     )
     {
         // Get default navigation
         this.navigation = navigation;
 
-        // Register the navigation to the service
         this._fuseNavigationService.register('main', this.navigation);
+
+        // Register the navigation to the service
 
         // Set the main navigation as our current navigation
         this._fuseNavigationService.setCurrentNavigation('main');
+        this.event.events.subscribe(eventTree => {
+            if (eventTree) {
+
+                const nav = this.event.mapEventToNavigationItem(eventTree);
+                console.log(nav);
+                this._fuseNavigationService.addNavigationItem(nav, 'events');
+            }
+
+        });
 
         // Add languages
         this._translateService.addLangs(['en', 'tr']);
