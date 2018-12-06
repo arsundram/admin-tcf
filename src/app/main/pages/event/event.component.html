@@ -8,191 +8,190 @@
 
             <div fxLayout="row" fxLayoutAlign="start center">
 
-                <div class="product-image mr-8 mr-sm-16"
+                <div class="product-image mr-8 mr-sm-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
                 >
                     <img [src]="'assets/images/ecommerce/product-image-placeholder.png'">
                 </div>
 
-                <div fxLayout="column" fxLayoutAlign="start start">
-                    <div class="h2" *ngIf="pageType ==='edit'">
-                        {{'dd'}}
-                    </div>
-                    <div class="h2" *ngIf="pageType ==='new'">
-                        New Product
+                <div fxLayout="column" fxLayoutAlign="start start"  [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2">
+                        {{ eventDetail && eventDetail.name}}
                     </div>
                     <div class="subtitle secondary-text">
-                        <span>Product Detail</span>
+                        <span>Event Details</span>
                     </div>
                 </div>
             </div>
-
-            <button mat-raised-button
-                    class="save-product-button"
-                    *ngIf="pageType ==='new'" >
-                <span>ADD</span>
-            </button>
-
-            <button mat-raised-button
-                    class="save-product-button"
-                    *ngIf="pageType ==='edit'" >
-                <span>SAVE</span>
-            </button>
         </div>
 
         <div class="content-card">
 
             <div class="content">
 
-                <form name="productForm" class="product w-100-p" fxLayout="column" fxFlex>
+                <div class="product w-100-p" fxLayout="column" fxFlex>
 
                     <mat-tab-group>
-
                         <mat-tab label="Basic Info">
+                            <form name="eventForm" [formGroup]="eventForm" class="product w-100-p" fxLayout="column" fxFlex>
 
                             <div class="tab-content p-24" fusePerfectScrollbar>
+                                <div class="w-100-p">
+                                    <mat-form-field class="w-100-p" appearance="outline">
+                                        <mat-label class="accent-fg">Event Description</mat-label>
+                                        <textarea matInput
+                                              name="description(40-400 char)"
+                                              [formControlName]="'description'"
+                                              rows="5">
+                                    </textarea>
+                                    </mat-form-field>
+                                </div>
 
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="name"
-                                           placeholder="Product Name"
-                                           formControl="formX"
-                                           required>
-                                </mat-form-field>
+                                <div class="w-100-p" fxLayout="row">
 
+                                    <div class="w-50-p">
+                                        <div class="accent-fg">
+                                            <span>Start Time</span>
+                                        </div>
+                                        <div fxLayout="row">
+                                            <span [owlDateTimeTrigger]="dt2">
+                                            <mat-icon _ngcontent-c56="" class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                             calendar_today
+                                             </mat-icon>
+                                            </span>
+                                            <input [owlDateTime]="dt2" placeholder="Start Time" [formControlName]="'startsAt'">
+                                            <owl-date-time #dt2 [pickerMode]="'popup'"></owl-date-time>
+                                        </div>
+                                    </div>
+
+                                    <div class="w-50-p">
+                                        <div class="accent-fg">
+                                            <span>End Time</span>
+                                        </div>
+                                        <div class="w-100-p" fxLayout="row">
+                                            <span [owlDateTimeTrigger]="dt1">
+                                            <mat-icon _ngcontent-c56="" class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                             calendar_today
+                                            </mat-icon>
+                                             </span>
+                                            <input [owlDateTime]="dt1" placeholder="End Time" [formControlName]="'endsAt'">
+                                            <owl-date-time #dt1 [pickerMode]="'popup'"></owl-date-time>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        </mat-tab>
+                        <mat-tab label="Event Poster">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                                <div fxLayout="row wrap w-100-p" fxLayoutAlign="start start">
+                                    <div fxLayout="row" fxFlexOffset="12" class="w-100-p p-12">
+                                        <button mat-raised-button color="accent" (click)="file.click()">Replace</button>
+                                        <input type="file" #file style="display: none;" (change)="previewImage($event)" [(ngModel)]="poster">
+                                    </div>
+                                    <div
+                                          fxlayout="row" fxLayoutAlign="center center" class="w-100-p">
+                                        <img class="media w-75-p m-auto"
+                                             [src]="posterURL | safe">
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Notifications">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                            <div class="w-100-p">
                                 <mat-form-field class="w-100-p">
+                                    <mat-label class="accent-fg">Notification body</mat-label>
                                     <textarea matInput
-                                              name="description"
-                                              placeholder="Product Description"
+                                              name="description(40-400 char)"
+                                              [(ngModel)]="notificationBody"
                                               rows="5">
                                     </textarea>
                                 </mat-form-field>
-
-                                <mat-form-field class="w-100-p">
-
-                                    <mat-chip-list #categoryList name="categories">
-
-                                        <input placeholder="Categories"
-                                               [matChipInputFor]="categoryList"
-                                               [matChipInputAddOnBlur]="true"
-                                               />
-
-                                    </mat-chip-list>
-
-                                </mat-form-field>
-
-
+                                <button mat-raised-button color="primary">SEND NOTIFICATION</button>
                             </div>
-
+                            </div>
                         </mat-tab>
-
-                        <mat-tab label="Product Images">
+                        <mat-tab label="Rounds" *ngIf="eventDetail && eventDetail.rounds">
                             <div class="tab-content p-24" fusePerfectScrollbar>
-                                <div fxLayout="row wrap" fxLayoutAlign="start start">
+                                <div class="w-100-p" *ngFor="let round of eventDetail.rounds; let i = index">
+                                    <span class="mat-title">Round {{i + 1}}</span>
+                                    <a style="float: right;" (click)="deleteRound(eventDetail, i)" class="link">
+                                        <mat-icon class="secondary-text s-32 mat-icon material-icons" role="link"
+                                                  aria-hidden="true" matTooltip="Delete Round"
+                                                  color="warn">delete_outline</mat-icon>
+                                    </a>
+                                    <mat-form-field class="w-100-p">
+                                        <mat-label class="accent-fg">Description</mat-label>
+                                        <textarea matInput
+                                                  name="description(40-400 char)"
+                                                  [(ngModel)]="round.description"
+                                                  rows="5">
+                                    </textarea>
+                                    </mat-form-field>
+                                    <div class="w-100-p" fxLayout="row">
+                                        <div class="w-50-p">
+                                            <div class="accent-fg">
+                                                <span>Start Time</span>
+                                            </div>
+                                            <div fxLayout="row">
+                                            <span [owlDateTimeTrigger]="dt2">
+                                            <mat-icon _ngcontent-c56="" class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                             calendar_today
+                                             </mat-icon>
+                                            </span>
+                                                <input [owlDateTime]="dt2" placeholder="Start Time" [(ngModel)]="round.startsAt">
+                                                <owl-date-time #dt2 [pickerMode]="'popup'"></owl-date-time>
+                                            </div>
+                                        </div>
 
-                                    <div
-                                         class="product-image" fxlayout="row" fxLayoutAlign="center center">
-                                        <img class="media"
-                                             [src]="'assets/images/ecommerce/product-image-placeholder.png'">
+                                        <div class="w-50-p">
+                                            <div class="accent-fg">
+                                                <span>End Time</span>
+                                            </div>
+                                            <div class="w-100-p" fxLayout="row">
+                                            <span [owlDateTimeTrigger]="dt1">
+                                            <mat-icon _ngcontent-c56="" class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                             calendar_today
+                                            </mat-icon>
+                                             </span>
+                                                <input [owlDateTime]="dt1" placeholder="End Time" [(ngModel)]="round.endsAt">
+                                                <owl-date-time #dt1 [pickerMode]="'popup'"></owl-date-time>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="w-100-p">
 
+                                    <div class="mat-subheading-2 accent-fg">Rules</div>
 
+                                    <div class="w-100-p" *ngFor="let rule of round.rules; let j = index">
+                                        <mat-form-field class="w-90-p">
+                                            <input matInput
+                                                      name="description(40-400 char)"
+                                                      [(ngModel)]="rule.description"
+                                                      >
+                                        </mat-form-field>
+                                        <a (click)="deleteRule(round, j)" class="link">
+                                            <mat-icon class="secondary-text s-16 mat-icon material-icons"
+                                                      role="link" aria-hidden="true" color="warn" matTooltip="Delete Rule">delete_outline</mat-icon>
+                                        </a>
+                                    </div>
+                                    <mat-icon class="secondary-text s-32 mat-icon material-icons" role="link" aria-hidden="true"
+                                              color="primary" (click)="addNewRule(round)" matTooltip="Add New Rule">add</mat-icon>
                                 </div>
-                            </div>
-                        </mat-tab>
-
-                        <mat-tab label="Pricing">
-                            <div class="tab-content p-24" fusePerfectScrollbar>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="priceTaxExcl"
-                                           placeholder="Tax Excluded Price" type="number">
-                                    <span matPrefix>$&nbsp;</span>
-                                </mat-form-field>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="priceTaxIncl"
-                                           placeholder="Tax Included Price" type="number">
-                                    <span matPrefix>$&nbsp;</span>
-                                </mat-form-field>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="taxRate"
-                                           placeholder="Tax Rate" type="number">
-                                    <span matPrefix>&#37;</span>
-                                </mat-form-field>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="comparedPrice"
-                                           placeholder="Compared Price" type="number">
-                                    <span matPrefix>$&nbsp;</span>
-                                    <mat-hint align="start">Add a compare price to show next to the real price
-                                    </mat-hint>
-                                </mat-form-field>
-
-                            </div>
-                        </mat-tab>
-
-                        <mat-tab label="Inventory">
-                            <div class="tab-content p-24" fusePerfectScrollbar>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="sku"
-                                           placeholder="SKU">
-                                </mat-form-field>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="quantity"
-                                           placeholder="Quantity" type="number">
-                                </mat-form-field>
-                            </div>
-                        </mat-tab>
-
-                        <mat-tab label="Shipping">
-                            <div class="tab-content p-24" fusePerfectScrollbar fxLayout="column">
-
-                                <div class="py-16" fxLayout="row">
-                                    <mat-form-field fxFlex>
-                                        <input matInput
-                                               name="Width"
-                                               placeholder="Width">
-                                    </mat-form-field>
-                                    <mat-form-field fxFlex>
-                                        <input matInput
-                                               name="Height"
-                                               placeholder="Height">
-                                    </mat-form-field>
-                                    <mat-form-field fxFlex>
-                                        <input matInput
-                                               name="Depth"
-                                               placeholder="Depth">
-                                    </mat-form-field>
                                 </div>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="Weight"
-                                           placeholder="Weight">
-                                </mat-form-field>
-
-                                <mat-form-field class="w-100-p">
-                                    <input matInput
-                                           name="extraShippingFee"
-                                           placeholder="Extra Shipping Fee" type="number">
-                                    <span matPrefix>$&nbsp;</span>
-                                </mat-form-field>
+                                <mat-icon class="secondary-text s-48 mat-icon material-icons" role="link" aria-hidden="true"
+                                          color="primary" (click)="addNewRound(eventDetail)" matTooltip="Add New Round">note_add</mat-icon>
+                                <button mat-raised-button color="accent" style="float: right;" (click)="updateDescription()">UPDATE INFO</button>
                             </div>
                         </mat-tab>
-
                     </mat-tab-group>
-                </form>
+                </div>
 
             </div>
+
 
         </div>
 

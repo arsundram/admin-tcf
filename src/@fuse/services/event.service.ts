@@ -70,7 +70,7 @@ export class EventService {
         return Promise.all(childrenPromises).then((data: any) => {
             return Promise.all(data.map(ev => this.getChildren(ev))).then(res => {
                 event.children = data;
-                console.log(event);
+                // console.log(event);
                 return event;
             });
         });

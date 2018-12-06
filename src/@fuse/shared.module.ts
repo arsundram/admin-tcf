@@ -10,6 +10,7 @@ import {AngularFireModule} from '@angular/fire';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import {environment} from '../environments/environment';
 import {AngularFireDatabaseModule} from '@angular/fire/database';
+import {AngularFireStorageModule} from '@angular/fire/storage';
 
 @NgModule({
     imports  : [
@@ -33,7 +34,8 @@ import {AngularFireDatabaseModule} from '@angular/fire/database';
         FuseDirectivesModule,
         FusePipesModule,
         AngularFireModule,
-        AngularFireAuthModule
+        AngularFireAuthModule,
+        AngularFireStorageModule
     ]
 })
 export class FuseSharedModule
