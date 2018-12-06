@@ -29,10 +29,6 @@ const routes = [
         loadChildren: './calendar/calendar.module#CalendarModule'
     },
     {
-        path        : 'e-commerce',
-        loadChildren: './e-commerce/e-commerce.module#EcommerceModule'
-    },
-    {
         path        : 'academy',
         loadChildren: './academy/academy.module#AcademyModule'
     },
