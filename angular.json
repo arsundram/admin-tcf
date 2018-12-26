@@ -31,7 +31,12 @@
                             "src/styles.scss"
                         ],
                         "scripts": [],
-                        "showCircularDependencies": false
+                        "showCircularDependencies": false,
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "./"
+                            ]
+                        }
                     },
                     "configurations": {
                         "production": {

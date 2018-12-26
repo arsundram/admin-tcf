@@ -71,8 +71,8 @@ export class LoginComponent implements OnInit
         this.loading = true;
         this.backendError = '';
         try {
-            await this.auth.login(this.loginForm.value);
-            await this.router.navigateByUrl('/');
+            const eventID = await this.auth.login(this.loginForm.value);
+            await this.router.navigateByUrl('/pages/events/' + eventID);
         } catch (e) {
             this.backendError = e;
         }

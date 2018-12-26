@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EventComponent } from './event.component';
 import {RouterModule} from '@angular/router';
 import {MatButtonModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatRippleModule, MatTabsModule,
      MatTooltipModule, MatSnackBarModule} from '@angular/material';
@@ -9,12 +8,20 @@ import {AgmCoreModule} from '@agm/core';
 import {FuseSharedModule} from '../../../../@fuse/shared.module';
 import {FuseWidgetModule} from '../../../../@fuse/components';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
-import { EventGuard } from './event.guard';
+import { UserListComponent } from './user-list/user-list.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserListGuard } from './user-list/user-list.guard';
+import { UserProfileGuard } from './user-profile/user-profile.guard';
 const routes = [
     {
-        path     : 'events/:id',
-        component: EventComponent,
-        canActivate: [EventGuard]
+        path     : 'users/list',
+        component: UserListComponent,
+        canActivate: [UserListGuard]
+    },
+    {
+        path: 'users/profile',
+        component: UserProfileComponent,
+        canActivate: [UserProfileGuard]
     }
 ];
 @NgModule({
@@ -40,6 +47,6 @@ const routes = [
       FuseSharedModule,
       FuseWidgetModule
   ],
-  declarations: [EventComponent]
+  declarations: [ UserProfileComponent, UserListComponent]
 })
-export class EventModule { }
+export class UsersModule { }
