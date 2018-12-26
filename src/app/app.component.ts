@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -11,10 +11,11 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { navigation } from 'app/navigation/navigation';
+import { navigation, userProfileNav } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import {EventService} from '../@fuse/services/event.service';
+import { UserService } from './main/pages/users/user.service';
 
 @Component({
     selector   : 'app',
@@ -50,7 +51,8 @@ export class AppComponent implements OnInit, OnDestroy
         private _fuseTranslationLoaderService: FuseTranslationLoaderService,
         private _translateService: TranslateService,
         private _platform: Platform,
-        private event: EventService
+        private event: EventService,
+        private userService: UserService
     )
     {
         // Get default navigation
@@ -64,10 +66,17 @@ export class AppComponent implements OnInit, OnDestroy
         this._fuseNavigationService.setCurrentNavigation('main');
         this.event.events.subscribe(eventTree => {
             if (eventTree) {
-
-                const nav = this.event.mapEventToNavigationItem(eventTree);
+                this._fuseNavigationService.removeNavigationItemChildren('events');
+                 const nav = this.event.mapEventToNavigationItem(eventTree);
                 console.log(nav);
                 this._fuseNavigationService.addNavigationItem(nav, 'events');
+                this.userService.checkIfIsAdmin('fest').then(res => {
+                    if (res) {
+                        this._fuseNavigationService.addNavigationItem(userProfileNav, 'users');
+                    } else {
+                        this._fuseNavigationService.removeNavigationItem('user-profile');
+                    }
+                });
             }
 
         });

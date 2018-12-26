@@ -35,14 +35,14 @@
                             <form name="eventForm" [formGroup]="eventForm" class="product w-100-p" fxLayout="column" fxFlex>
 
                             <div class="tab-content p-24" fusePerfectScrollbar>
+
                                 <div class="w-100-p">
                                     <mat-form-field class="w-100-p" appearance="outline">
-                                        <mat-label class="accent-fg">Event Description</mat-label>
+                                        <mat-label class="accent-fg">Event Description(40-400char)</mat-label>
                                         <textarea matInput
                                               name="description(40-400 char)"
                                               [formControlName]="'description'"
-                                              rows="5">
-                                    </textarea>
+                                              rows="5"></textarea>
                                     </mat-form-field>
                                 </div>
 
@@ -78,6 +78,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="w-100-p pt-12" fxLayout="row">
+                                    <button mat-raised-button color="accent" (click)="updateDescription()">Save</button>
+                                </div>
 
                             </div>
                         </form>
@@ -86,14 +89,17 @@
                         <mat-tab label="Event Poster">
                             <div class="tab-content p-24" fusePerfectScrollbar>
                                 <div fxLayout="row wrap w-100-p" fxLayoutAlign="start start">
-                                    <div fxLayout="row" fxFlexOffset="12" class="w-100-p p-12">
+                                    <div fxLayout="row" fxFlexOffset="12" class="w-100-p p-12" style="justify-content: space-between;">
                                         <button mat-raised-button color="accent" (click)="file.click()">Replace</button>
+                                        <button mat-raised-button [color]="uploading ? 'disabled' : 'primary'" 
+                                        (click)="saveImage()" *ngIf="imageFile"
+                                        [disabled]="uploading">{{uploading ? 'Uploading' : 'Save'}}</button>
                                         <input type="file" #file style="display: none;" (change)="previewImage($event)" [(ngModel)]="poster">
                                     </div>
                                     <div
                                           fxlayout="row" fxLayoutAlign="center center" class="w-100-p">
                                         <img class="media w-75-p m-auto"
-                                             [src]="posterURL | safe">
+                                             [src]="posterURL | safe" *ngIf="posterURL">
                                     </div>
                                 </div>
                             </div>
@@ -110,8 +116,34 @@
                                               rows="5">
                                     </textarea>
                                 </mat-form-field>
-                                <button mat-raised-button color="primary">SEND NOTIFICATION</button>
+                                <button mat-raised-button color="primary" (click)="sendNotification()">SEND NOTIFICATION</button>
                             </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Docs" *ngIf="eventDetail && eventDetail.links">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                                <div class="w-100-p" *ngFor="let link of eventDetail.links; let i = index">
+                                    <mat-form-field class="w-100-p">
+                                        <mat-label class="accent-fg">Link</mat-label>
+                                        <input matInput
+                                        [(ngModel)]="link.url">
+                                    </mat-form-field>
+                                    <mat-form-field class="w-100-p">
+                                        <mat-label class="accent-fg">Description</mat-label>
+                                        <input matInput
+                                        [(ngModel)]="link.description">
+                                    </mat-form-field>
+                                    <a (click)="deleteLink(i)" class="link">
+                                        <mat-icon class="secondary-text s-24 mat-icon material-icons"
+                                            role="link" aria-hidden="true" color="warn" matTooltip="Delete link">delete_outline</mat-icon>
+                                    </a>
+                                </div>
+                                <a (click)="addLink()" class="link">
+                                    <mat-icon class="secondary-text s-32 mat-icon material-icons"
+                                    role="link" aria-hidden="true" color="warn" matTooltip="Add link">add</mat-icon>
+                                </a>
+                                <button mat-raised-button color="accent" style="float: right;" (click)="updateLinks()">UPDATE LINKS</button>
+
                             </div>
                         </mat-tab>
                         <mat-tab label="Rounds" *ngIf="eventDetail && eventDetail.rounds">
@@ -130,6 +162,13 @@
                                                   [(ngModel)]="round.description"
                                                   rows="5">
                                     </textarea>
+                                    </mat-form-field>
+                                    <mat-form-field class="w-100-p">
+                                        <mat-label class="accent-fg">Venue</mat-label>
+                                        <input type="text" matInput
+                                                  name="venue"
+                                                  [(ngModel)]="round.venue"
+                                                  rows="5">
                                     </mat-form-field>
                                     <div class="w-100-p" fxLayout="row">
                                         <div class="w-50-p">
@@ -184,7 +223,7 @@
                                 </div>
                                 <mat-icon class="secondary-text s-48 mat-icon material-icons" role="link" aria-hidden="true"
                                           color="primary" (click)="addNewRound(eventDetail)" matTooltip="Add New Round">note_add</mat-icon>
-                                <button mat-raised-button color="accent" style="float: right;" (click)="updateDescription()">UPDATE INFO</button>
+                                <button mat-raised-button color="accent" style="float: right;" (click)="updateRounds()">UPDATE INFO</button>
                             </div>
                         </mat-tab>
                     </mat-tab-group>

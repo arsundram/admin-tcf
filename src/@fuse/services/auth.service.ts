@@ -3,13 +3,14 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {AngularFireDatabase} from '@angular/fire/database';
 import {BehaviorSubject} from 'rxjs';
 import {User} from 'firebase';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
     public user$: BehaviorSubject<User | null>;
-    constructor(private afAuth: AngularFireAuth, private afDb: AngularFireDatabase) {
+    constructor(private afAuth: AngularFireAuth, private afDb: AngularFireDatabase, private router: Router) {
         this.user$ = new BehaviorSubject(null);
         this.afAuth.authState.subscribe(res => {
            this.user$.next(res);
@@ -28,6 +29,7 @@ export class AuthService {
                 await this.afAuth.auth.signOut();
                 throw new Error('Sorry, we could not find your event');
             }
+            return eventID;
 
         } catch (e) {
             console.log(e);
@@ -35,7 +37,9 @@ export class AuthService {
         }
     }
     logout() {
-        return this.afAuth.auth.signOut();
+        return this.afAuth.auth.signOut().then(() => {
+            return this.router.navigateByUrl('/');
+        });
     }
     getUserDetail(uid) {
         return this.afDb.database.ref('users/' + uid).once('value').then(res => res.val());

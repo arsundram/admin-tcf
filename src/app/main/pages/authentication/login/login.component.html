@@ -5,7 +5,7 @@
         <div id="login-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
 
             <div class="logo">
-                <img src="assets/images/logos/fuse.svg">
+                <img src="assets/images/coronaBlack.png">
             </div>
 
             <div class="title">LOGIN TO YOUR ACCOUNT</div>
@@ -31,7 +31,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
+                <!-- <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
                      fxLayoutAlign="space-between center">
                     <mat-checkbox class="remember-me" aria-label="Remember Me">
                         Remember Me
@@ -40,7 +40,7 @@
                     <a class="forgot-password" [routerLink]="'/pages/auth/forgot-password'">
                         Forgot Password?
                     </a>
-                </div>
+                </div> -->
                 <mat-error
                     *ngIf="backendError">
                         {{backendError}}
@@ -52,7 +52,7 @@
 
             </form>
 
-            <div class="separator">
+            <!-- <div class="separator">
                 <span class="text">OR</span>
             </div>
 
@@ -67,7 +67,7 @@
             <div class="register" fxLayout="column" fxLayoutAlign="center center">
                 <span class="text">Don't have an account?</span>
                 <a class="link" [routerLink]="'/pages/auth/register'">Create an account</a>
-            </div>
+            </div> -->
 
         </div>
 

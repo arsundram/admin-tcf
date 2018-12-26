@@ -8,43 +8,40 @@ export const navigation: FuseNavigation[] = [
         type     : 'group',
         icon     : 'apps',
         children : [
-            {
-                id       : 'dashboards',
-                title    : 'Dashboard',
-                translate: 'NAV.DASHBOARDS',
-                type     : 'collapsable',
-                icon     : 'dashboard',
-                children : [
-                    {
-                        id   : 'analytics',
-                        title: 'Analytics',
-                        type : 'item',
-                        url  : '/apps/dashboards/analytics'
-                    }
-                ]
-            }, {
+             {
                 id       : 'events',
                 title    : 'Events',
                 translate: 'NAV.DASHBOARDS',
                 type     : 'collapsable',
                 icon     : 'dashboard'
             },
-
             {
-                id       : 'chat',
-                title    : 'Chat',
-                translate: 'NAV.CHAT',
-                type     : 'item',
-                icon     : 'chat',
-                url      : '/apps/chat',
-                badge    : {
-                    title: '13',
-                    bg   : '#09d261',
-                    fg   : '#FFFFFF'
-                }
+                id       : 'users',
+                title    : 'Users',
+                translate: 'NAV.DASHBOARDS',
+                type     : 'collapsable',
+                icon     : 'group',
+                children: [
+                    {
+                        id       : 'users-list',
+                        title    : 'User List',
+                        translate: 'NAV.DASHBOARDS',
+                        type     : 'item',
+                        icon: 'list',
+                        url     : 'pages/users/list',
+                    }
+                ]
             }
-
         ]
-    }
+    },
 
 ];
+export const userProfileNav = {
+    id       : 'user-profile',
+    title    : 'User Profile',
+    translate: 'NAV.DASHBOARDS',
+    type     : 'item',
+    icon     : 'person',
+    url: 'pages/users/profile'
+};
+

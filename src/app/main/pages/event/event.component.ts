@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {ActivatedRoute} from '@angular/router';
 import {EventEditService} from './event-edit.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-event',
@@ -16,28 +17,47 @@ export class EventComponent implements OnInit {
     pageType = 'edit';
     eventDetail;
     imageFile;
-    posterURL = 'https://firebasestorage.googleapis.com/v0/b/sac-nit-patna-69299.appspot.com/o/byte-o.jpg?alt=media&token=ab1791ab-f0ee-42bf-a095-d812782313b3';
+    posterURL;
     notificationBody;
     poster;
+    eventId;
+    uploading = false;
     eventForm = new FormGroup({
         'description': new FormControl('', [Validators.required, Validators.minLength(40), Validators.maxLength(400)]),
         'startsAt': new FormControl('', Validators.required),
         'endsAt': new FormControl('', Validators.required),
-    })
-  constructor(private route: ActivatedRoute, private eventEditService: EventEditService) {
+    });
+  constructor(private route: ActivatedRoute, private eventEditService: EventEditService, private snackBar: MatSnackBar) {
       this.route.params.subscribe(params => {
-         this.eventEditService.getEventDetail(params['id']).then(res => {
+          this.eventId = params['id'];
+          this.notificationBody = '';
+        this.eventEditService.getEventDetail(this.eventId).then(res => {
              this.eventDetail = res;
              console.log(res);
              this.setEventForm(res);
+             if (this.eventDetail.posterId) {
+                this.eventEditService.getEventPoster(this.eventId, this.eventDetail.posterId).then(imageUrl => {
+                    this.posterURL = imageUrl;
+                });
+                } else {
+                    this.posterURL = null;
+             }
+             if (this.eventDetail.rounds) {
+                 this.eventDetail.rounds.forEach(round => {
+                    if (round.venue === undefined) {
+                        round.venue = 'unknown';
+                    }
+                 });
+                 this.timeStampToDate(this.eventDetail.rounds);
+             }
+             if (!this.eventDetail.links) {
+                this.eventDetail.links = [];
+             }
          });
       });
   }
 
   ngOnInit() {
-        this.eventForm.valueChanges.subscribe(res => {
-           console.log(res);
-        });
   }
 
   setEventForm(eventDetail) {
@@ -75,6 +95,7 @@ export class EventComponent implements OnInit {
             description: 'New Round',
             startsAt: Date.now(),
             endsAt: Date.now(),
+            venue: 'unknown',
             rules: [
                 {
                     description: 'New rule'
@@ -82,19 +103,89 @@ export class EventComponent implements OnInit {
             ]
         });
   }
+  updateRounds() {
+      this.dateToTimeStamp(this.eventDetail.rounds);
+      this.eventEditService.updateRounds(this.eventId, this.eventDetail.rounds).then(() => this.openSnackBar('Rounds updated'));;
+      this.timeStampToDate(this.eventDetail.rounds);
+  }
+
+  addLink() {
+      this.eventDetail.links.push({
+        description: '',
+        url: ''
+      });
+  }
+  deleteLink(i) {
+      this.eventDetail.links.splice(i, 1);
+  }
+  updateLinks() {
+      this.eventEditService.updateLinks(this.eventId, this.eventDetail.links).then(() => {
+        this.openSnackBar('Links updated');
+      });
+  }
+  dateToTimeStamp(data) {
+    data.forEach(item => {
+        item.startsAt = new Date(item.startsAt).getTime();
+        item.endsAt = new Date(item.endsAt).getTime();
+    });
+  }
+  timeStampToDate(data) {
+  data.forEach(item => {
+        item.startsAt = new Date(item.startsAt);
+        item.endsAt = new Date(item.endsAt);
+    });
+  }
   updateDescription() {
-    console.log(this.eventDetail);
+      if (!this.eventForm.valid) {
+        this.snackBar.open('The description should be between 40 to 400 characters! Please ensure you have have selected valid date!', null , {
+            duration: 2000,
+            panelClass: 'error'
+        });
+        return ;
+      }
+      const data = Object.assign(this.eventForm.value);
+      data.startsAt = new Date(data.startsAt).getTime();
+      data.endsAt = new Date(data.endsAt).getTime();
+      this.eventEditService.updateEventDescription(this.eventId, data).then(() => this.openSnackBar('Description updated!'));
+
   }
   sendNotification() {
-
+    this.eventEditService.sendNotification(this.eventId, this.notificationBody).then(res => {
+        this.openSnackBar('Notification sent');
+    }).catch(e => {
+        this.openSnackBar(e && e.message);
+    });
   }
   previewImage(e) {
         this.imageFile = e.target.files[0];
+        console.log(this.imageFile.size / 1024);
+        console.log(this.imageFile);
+        let errMsg = '';
+        if (this.imageFile.type.slice(0, 5) !== 'image') {
+            errMsg = 'File is not image';
+        }
+       
+        if (this.imageFile.size / 1024 <= 100 || this.imageFile.size / (1024 * 1024) >= 10) {
+            errMsg = 'Size should be between 100kB and 10MB';
+        }
+        if (errMsg !== '') {
+            this.openSnackBar(errMsg);
+            this.imageFile = null;
+            return;
+        }
         const url = URL.createObjectURL(e.target.files[0]);
         this.posterURL = url;
     }
-    uploadImage() {
-
+    saveImage() {
+        this.uploading = true;
+        this.eventEditService.uploadPoster(this.imageFile, this.eventId).then(res => {
+            this.uploading = false;
+            this.openSnackBar('Poster updated');
+        });
     }
-
+    openSnackBar(message) {
+        return this.snackBar.open(message, null , {
+                duration: 2000,
+            });
+    }
 }

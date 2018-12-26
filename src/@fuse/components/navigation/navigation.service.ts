@@ -289,7 +289,6 @@ export class FuseNavigationService
     {
         // Get the current navigation
         const navigation: any[] = this.getCurrentNavigation();
-
         // Add to the end of the navigation
         if ( id === 'end' )
         {
@@ -346,5 +345,14 @@ export class FuseNavigationService
 
         // Remove the item
         parent.splice(parent.indexOf(item), 1);
+    }
+    removeNavigationItemChildren(id): void {
+        const item = this.getNavigationItem(id);
+        if ( !(item && item.children))
+        {
+            return;
+        }
+
+        item.children = [];
     }
 }
