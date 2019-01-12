@@ -11,7 +11,7 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { navigation, userProfileNav } from 'app/navigation/navigation';
+import { navigation, campusAmbassadorNav, festAnalyticsNav } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import {EventService} from '../@fuse/services/event.service';
@@ -72,9 +72,11 @@ export class AppComponent implements OnInit, OnDestroy
                 this._fuseNavigationService.addNavigationItem(nav, 'events');
                 this.userService.checkIfIsAdmin('fest').then(res => {
                     if (res) {
-                        this._fuseNavigationService.addNavigationItem(userProfileNav, 'users');
+                        this._fuseNavigationService.addNavigationItem(campusAmbassadorNav, 'users');
+                        this._fuseNavigationService.addNavigationItem(festAnalyticsNav, 'applications');
                     } else {
-                        this._fuseNavigationService.removeNavigationItem('user-profile');
+                        this._fuseNavigationService.removeNavigationItem('campus-ambassador-program');
+                        this._fuseNavigationService.removeNavigationItem('fest-analytics');
                     }
                 });
             }

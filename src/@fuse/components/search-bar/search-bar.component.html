@@ -9,12 +9,12 @@
             </button>
         </label>
 
-        <input id="fuse-search-bar-input" class="ml-24" type="text" placeholder="Search" (input)="search($event)"
+        <input id="fuse-search-bar-input" class="ml-24" type="text" placeholder="Search" [(ngModel)]="searchVal" (keypress)="collapseIfEnter($event)"
                fxFlex>
 
         <button mat-icon-button class="fuse-search-bar-collapser" (click)="collapse()"
                 aria-label="Collapse Search Bar">
-            <mat-icon class="s-24 secondary-text">close</mat-icon>
+            <mat-icon class="s-24 primary-fg">search</mat-icon>
         </button>
 
     </div>

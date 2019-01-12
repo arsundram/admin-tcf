@@ -1,0 +1,198 @@
+<div id="dashboard-analytics" class="page-layout blank" *ngIf="loaded">
+
+    <div class="main-widget">
+        <div class="h2 p-12 deep-purple fuse-white-fg" fxLayout="row" fxLayoutAlign="center">
+            <p>{{eventName}} / {{eventType}} </p>
+            <p *ngIf="eventType === 'team'">
+                / {{min}} - {{max}} Members
+            </p>
+        </div>
+        <div class="position-relative p-24 blue-600"
+             fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start">
+                <span class="h2">Selections & Registrations</span>
+                <span class="h5 secondary-text">Registrations and Selections of users by round</span>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 blue-700"
+                     >
+                    JAN 2019
+                </div>
+            </div>
+        </div>
+
+        <div class="position-relative h-256 pb-16 blue-600">
+            <canvas baseChart
+                    [datasets]="widgets.widget1.datasets"
+                    [labels]="widgets.widget1.labels"
+                    [colors]="widgets.widget1.colors"
+                    [options]="widgets.widget1.options"
+                    [chartType]="widgets.widget1.chartType">
+            </canvas>
+        </div>
+
+    </div>
+
+    <div class="content w-100-p" fxLayout="column">
+
+        <div class="w-100-p mr-lg-32">
+
+            <div class="pb-24 font-size-18 font-weight-300">
+                How many {{ eventType === 'team' ? 'teams' : 'users' }} are in which round?
+            </div>
+
+            <div fxLayout="column w-100-p" fxLayoutAlign="start"
+                  fxLayoutAlign.gt-sm="start start">
+
+                <!-- Widget 2 -->
+                <div class="widget" fxFlex="100">
+
+                    <div class="fuse-card auto-width mb-32" [ngClass.gt-sm]="'mb-0 mr-32'">
+
+                        <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end">
+
+                            <div class="pr-16">
+                                <div class="h3 secondary-text">Rounds Status</div>
+                            </div>
+
+                        </div>
+
+                        <div class="h-200 w-100-p">
+                            <canvas baseChart *ngIf="widgets.widget2.datasets.length > 0"
+                                    [datasets]="widgets.widget2.datasets"
+                                    [labels]="widgets.widget2.labels"
+                                    [colors]="widgets.widget2.colors"
+                                     [options]="widgets.widget2.options"
+                                    [chartType]="'bar'">
+                            </canvas>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- / Widget 2 -->
+
+            </div>
+
+        </div>
+        <div class="w-100-p mr-lg-32">
+
+            <div class="pb-24 font-size-18 font-weight-300">
+                Your users' subscriptions
+            </div>
+
+            <div fxLayout="column w-100-p" fxLayoutAlign="start"
+                  fxLayoutAlign.gt-sm="start start">
+
+                <!-- Widget 2 -->
+                <div class="widget" fxFlex="100" >
+
+                    <div class="fuse-card auto-width mb-32" [ngClass.gt-sm]="'mb-0 mr-32'">
+
+                        <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end">
+
+                            <div class="pr-16">
+                                <div class="h3 secondary-text">Package Subscriptions</div>
+                            </div>
+
+                        </div>
+
+                        <div class="h-200 w-100-p">
+                            <canvas baseChart *ngIf="widgets.widget2.datasets.length > 0"
+                                    [datasets]="widgets.widget3.datasets"
+                                    [labels]="widgets.widget3.labels"
+                                    [colors]="widgets.widget2.colors"
+                                     [options]="widgets.widget2.options"
+                                    [chartType]="'bar'">
+                            </canvas>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- / Widget 2 -->
+
+            </div>
+
+        </div>
+        <div clas="w-100-p">
+
+            <div fxLayout="row wrap">
+
+                <div class="mb-48 w-100-p" fxLayout="column" [ngClass.lt-lg]="'mr-32'">
+
+                    <div class="pb-24 font-size-18 font-weight-300">
+                        Other Data
+                    </div>
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-around">
+                    <div class="fuse-card">
+
+                        <div class="p-16">
+                            <div class="h1 font-weight-300">Native Users</div>
+                        </div>
+
+
+                        <div class="p-16" fxLayout="row" fxLayoutAlign="center center">
+
+                            <div class="px-16 h1" fxLayout="column" fxLayoutAlign="start center">
+                                {{ nativePeople }} / {{totalPeople}}
+                            </div>
+
+                        </div>
+
+                        <div class="card-divider mb-0"></div>
+                    </div>
+
+                    <div class="fuse-card" *ngIf="eventType === 'team'">
+
+                        <div class="p-16">
+                            <div class="h1 font-weight-300">Total Teams</div>
+                        </div>
+
+
+                        <div class="p-16" fxLayout="row" fxLayoutAlign="center center">
+
+                            <div class="px-16 h1" fxLayout="column" fxLayoutAlign="start center">
+                                {{totalTeams}}
+                            </div>
+
+                        </div>
+
+                        <div class="card-divider mb-0"></div>
+
+                    </div>
+
+                    <div class="fuse-card"  *ngIf="eventType === 'team'">
+
+                        <div class="p-16">
+                            <div class="h1 font-weight-300">Native Team Captains</div>
+                        </div>
+
+
+                        <div class="p-16" fxLayout="row" fxLayoutAlign="center center">
+
+                            <div class="px-16 h1" fxLayout="column" fxLayoutAlign="start center">
+                                {{ nativeTeamCaptains }}
+                            </div>
+
+                        </div>
+
+                        <div class="card-divider mb-0"></div>
+
+
+                    </div>
+                    </div>
+
+                </div>
+                <!-- / Widget 7 -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div id="dashboard-analytics" class="page-layout blank red-fg" *ngIf="!loaded" fxLayot="row" fxLayoutAlign="center">
+    No Analytics Data Available
+</div>

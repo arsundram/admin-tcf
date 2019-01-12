@@ -6,3 +6,7 @@
 .link:hover {
     cursor: pointer !important;
 }
+.disabled {
+    pointer-events: none;
+    cursor: default !important;
+}

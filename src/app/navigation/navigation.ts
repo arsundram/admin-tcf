@@ -23,25 +23,45 @@ export const navigation: FuseNavigation[] = [
                 icon     : 'group',
                 children: [
                     {
-                        id       : 'users-list',
-                        title    : 'User List',
+                        id       : 'user-profile',
+                        title    : 'User Profile',
                         translate: 'NAV.DASHBOARDS',
                         type     : 'item',
-                        icon: 'list',
-                        url     : 'pages/users/list',
+                        icon     : 'person',
+                        url: 'pages/users/profile'
                     }
                 ]
+            },
+            {
+                id       : 'live-stream',
+                title    : 'Live Streaming',
+                translate: 'NAV.DASHBOARDS',
+                type     : 'item',
+                icon     : 'slow_motion_video',
+                url: 'pages/live-stream'
             }
         ]
     },
 
 ];
-export const userProfileNav = {
-    id       : 'user-profile',
-    title    : 'User Profile',
+export const campusAmbassadorNav = {
+    id       : 'campus-ambassador-program',
+    title    : 'Campus Ambassador',
     translate: 'NAV.DASHBOARDS',
     type     : 'item',
-    icon     : 'person',
-    url: 'pages/users/profile'
+    icon: 'list',
+    url     : 'pages/users/campus-ambassador-program',
 };
+export const festAnalyticsNav = {
+    id       : 'fest-analytics',
+    title    : 'Fest Analytics',
+    translate: 'NAV.DASHBOARDS',
+    type     : 'item',
+    icon: 'show_chart',
+    url     : 'pages/fest-analytics'
+};
+
+
+
+
 

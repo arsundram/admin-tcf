@@ -84,7 +84,88 @@
 
                             </div>
                         </form>
+                        </mat-tab>
+                        <mat-tab label="Registration Detail" *ngIf="eventDetail && eventDetail.registrationDetail">
+                            <div class="tab-content p-24">
+                                <div  class="product w-100-p" fxLayout="column" fxFlex>
+                                    <div fxLayout="row" fxLayoutAlign="space-between">
+                                        <button mat-stroked-button *ngIf="eventDetail.registrationDetail.type === 'solo'" class="primary-fg">
+                                            <mat-icon class="s-48">
+                                                person_outline
+                                            </mat-icon>
+                                            Solo Event
+                                        </button>
+                                        <button mat-raised-button *ngIf="eventDetail.registrationDetail.type === 'team'">
+                                            <mat-icon class="s-48">
+                                                people_outline
+                                            </mat-icon>
+                                            Team Event ( {{eventDetail.registrationDetail.min}}  - {{eventDetail.registrationDetail.max}}  Members  )   
+                                        </button>
 
+                                        <div fxLayout="column">
+                                                <p class="green-fg">Registration Portal Opens</p>
+                                                <div fxLayout="row">
+                                                <span [owlDateTimeTrigger]="dt1">
+                                                <mat-icon _ngcontent-c56="" class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                                    calendar_today
+                                                    </mat-icon>
+                                                </span>
+                                                    <input [owlDateTime]="dt1" placeholder="Start Time" [(ngModel)]="eventDetail.registrationDetail.startsAt" hidden>
+                                                    <p>{{eventDetail.registrationDetail.startsAt | date:'short'}}</p>
+                                                    <owl-date-time #dt1 [pickerMode]="'dialog'"></owl-date-time>
+                                                </div>
+                                        </div>
+                                        
+
+                                        <div fxLayout="column">
+                                                <p class="warn-fg">Registration Portal Closes</p>
+                                            <div fxLayout="row">
+                                            <span [owlDateTimeTrigger]="dt2">
+                                            <mat-icon _ngcontent-c56="" class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                                calendar_today
+                                                </mat-icon>
+                                            </span>
+                                                <input [owlDateTime]="dt2" placeholder="Start Time" [(ngModel)]="eventDetail.registrationDetail.endsAt" hidden>
+                                                <p>{{eventDetail.registrationDetail.endsAt | date:'short'}}</p>
+
+                                                <owl-date-time #dt2 [pickerMode]="'dialog'"></owl-date-time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row w-100-p">
+                                        <p *ngIf="eventDetail.registrationDetail.restricted && eventDetail.registrationDetail.restricted === true"
+                                        class="green-fg">
+                                            This event has restricted access for registration,
+                                             This means only the participants who have already paid for any one of the package options can register to it.
+                                             If the event is a team event, all the members should have the package.
+                                        </p>
+                                        <p *ngIf="!eventDetail.registrationDetail.restricted" class="red-fg">
+                                                This event has ropen registration,
+                                               This means anyone can register to this event.
+                                               Please be careful while selecting participants for the next round and check the packages subscribed by the particpants.
+                                               If this is a team event, the package is probably required for only the team captain.
+                                        </p>
+                                    </div>
+                                    <div class="w-100-p" fxLayout="column">
+                                        <div class="h1 w-100-p primary-text text-center">Package Options</div>
+                                        <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-around">
+                                                <button mat-button [class]="packageClasses[package] + '-fg'"
+                                                *ngFor="let package of eventDetail.registrationDetail.packages" 
+                                                >
+                                                    <mat-icon class="m-4">
+                                                        {{ packageIcons[package] }}
+                                                    </mat-icon> <p>{{ package }}</p>
+                                                </button>
+                                        </div> 
+                                    </div>
+                                    <div class="w-100-p mt-32">
+                                        <button mat-raised-button (click)="updatePortalTimings()" class="deep-purple">
+                                            Update Portal Timings
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
                         </mat-tab>
                         <mat-tab label="Event Poster">
                             <div class="tab-content p-24" fusePerfectScrollbar>

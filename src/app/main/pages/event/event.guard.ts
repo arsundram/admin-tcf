@@ -11,6 +11,7 @@ export class EventGuard {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         return this.permitAccesByEventTreeSearch(route.params['id']);
+               
     }
     permitAccesByEventTreeSearch(eventId) {
         if (this.auth.user$.value && this.eventService.events.value) {
@@ -18,27 +19,7 @@ export class EventGuard {
         }
         return this.initialStateResolveOrReject(eventId);
     }
-    findInsideEventTree(parent, eventId) {
-        if ( parent && parent.url) {
 
-            const url = parent.url.split('/');
-            const checkerId = url[url.length - 1];
-            if (checkerId === eventId) {
-                return true;
-            } 
-        } else if (parent && parent.id && (parent.id === eventId)) {
-            return true;
-        }
-        
-       
-        if (parent.children) {
-           const check = parent.children.some(child => {
-                return this.findInsideEventTree(child, eventId);
-            });
-            return check;
-        }
-        return false;
-    }
     initialStateResolveOrReject(eventId) {
         return new Promise((resolve, reject) => {
             const sub = this.afAuth.authState.subscribe((user) => {
@@ -63,10 +44,10 @@ export class EventGuard {
          });
     }
     resolveOrReject( eventTree, eventId) {
-        if (!this.findInsideEventTree(eventTree, eventId) ){
+        if (!this.eventService.findInsideEventTree(eventTree, eventId) ){
             this.router.navigateByUrl('/pages/errors/error-404');
-             return false;
+             return Promise.resolve(false);
        }
-       return true;
+       return Promise.resolve(true);
     }
 }

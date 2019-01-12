@@ -19,10 +19,10 @@ export class EventEditService {
 
   }
   updateLinks(eventId, links) {
-    return this.afDb.database.ref('/events/' + eventId + '/links').update(links);
+    return this.afDb.database.ref('/events/' + eventId + '/links').set(links);
   }
   updateRounds(eventId, rounds) {
-        return this.afDb.database.ref('/events/' + eventId + '/rounds').update(rounds);
+        return this.afDb.database.ref('/events/' + eventId + '/rounds').set(rounds);
   }
   uploadPoster(file, id) {
       const randomId = Math.random().toString(36).substring(2);
@@ -38,5 +38,8 @@ export class EventEditService {
     return this.afFunctions.httpsCallable('functions-EventFunctions-eventNotice')({
         eventId, eventNotice
     }).toPromise();
+  }
+  updatePortal(eventId, startsAt, endsAt) {
+      return this.afDb.database.ref('events/' + eventId + '/registrationDetail').update({startsAt, endsAt});
   }
 }

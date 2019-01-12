@@ -1,0 +1,118 @@
+    <div id="orders" class="page-layout carded fullwidth inner-scroll" *ngIf="allCampusAmbassadors.length !== 0">
+
+            <!-- TOP BACKGROUND -->
+            <div class="top-bg accent"></div>
+            <!-- / TOP BACKGROUND -->
+        
+            <!-- CENTER -->
+            <div class="center">
+            <!-- HEADER -->
+            <div class="header accent"
+            fxLayout="column" fxLayoutAlign="center center"
+            >
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="space-between" class="w-100-p mt-16 mb-24">
+            <div class="logo"
+                fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="logo-icon mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                event
+            </mat-icon>
+            <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Campus Ambassadors</span>
+            </div>
+            </div>
+            <!-- / APP TITLE -->
+            <div class="w-100-p mb-12" 
+            fxLayout="row" 
+            fxLayoutAlign="space-between"
+            >
+            </div>
+            </div>
+            <!-- / HEADER -->
+            <div class="content-card">
+                    
+                    <mat-table class="orders-table"
+                    #table [dataSource]="filteredCampusAmbassadors"
+                    matSort (matSortChange)="sortInput($event)"
+                    [@animateStagger]="{value:'50'}"
+                    fusePerfectScrollbar>
+
+             <!-- SNo Column -->
+             <ng-container matColumnDef="points">
+                 <mat-header-cell *matHeaderCellDef mat-sort-header>Points</mat-header-cell>
+                 <mat-cell *matCellDef="let el">
+                     <div class="h2 fuse-black-fg w-52">{{el.points}}</div>
+                     <div fxLayout="column" fxLayoutAlign="space-between">
+                            <button class="h-24 green-fg cursor-pointer" (click)="changePoints(el.uid, true)">
+                                <mat-icon class="h-8">add_circle</mat-icon>
+                            </button>
+                            <button class="h-24 warn-fg cursor-pointer" (click)="changePoints(el.uid, false)">
+                                <mat-icon class="h-8">remove_circle</mat-icon>
+                            </button>
+                        </div>
+                 </mat-cell>
+                
+             </ng-container>
+
+             <!-- Name Column -->
+             <ng-container matColumnDef="name">
+                 <mat-header-cell *matHeaderCellDef mat-sort-header >Name</mat-header-cell>
+                 <mat-cell *matCellDef="let el">
+                         <a mat-stroked-button [routerLink]='"/pages/users/profile"' 
+                         [queryParams]="{uid : el.uid}" class="mb-4"
+                         >{{el.name}}
+                         </a>
+                 </mat-cell>
+             </ng-container>
+
+             <!-- TCFID Column -->
+             <ng-container matColumnDef="collegeName" >
+                 <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>College</mat-header-cell>
+                 <mat-cell *matCellDef="let el" fxHide fxShow.gt-md>
+                     <p>
+                        {{el.collegeName}}
+                     </p>
+                 </mat-cell>
+             </ng-container>
+
+             <!-- Email -->
+             <ng-container matColumnDef="email">
+                 <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                 <mat-cell *matCellDef="let el">
+                     <p>
+                         {{el.email}}
+                     </p>
+                 </mat-cell>
+             </ng-container>
+
+             <!-- Is Native -->
+             <ng-container matColumnDef="native">
+                 <mat-header-cell *matHeaderCellDef mat-sort-header>Native</mat-header-cell>
+                 <mat-cell *matCellDef="let el">
+                     <p>
+                         <mat-icon>{{el.collegeId === 'nitp' ? 'check' : 'clear'}}</mat-icon>
+                     </p>
+                 </mat-cell>
+             </ng-container>
+
+             <mat-header-row *matHeaderRowDef="columns; sticky:true"></mat-header-row>
+
+             <mat-row *matRowDef="let row; columns: columns"
+                      class="order"
+                      matRipple
+                      >
+             </mat-row>
+         </mat-table>
+
+         <mat-paginator
+                        [length]="allCampusAmbassadors.length"
+                        [pageIndex]="0"
+                        [pageSize]="50"
+                        [pageSizeOptions]="[1, 10, 25, 100]"
+                        (page)="paginate($event)"
+                        >
+         </mat-paginator>
+            </div>
+            </div>
+            </div>
+            

@@ -1,0 +1,387 @@
+<div id="order" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent"
+             fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="column" fxLayoutAlign="start center" class="w-100-p">
+                <div fxLayout="row" style="justify-content: space-between;"
+                     [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}" class="w-100-p">
+                     <div fxLayout="row">
+                            <p class="m-auto">{{(user && user.name) || 'NO USER SELECTED' }}</p>
+                            <mat-icon class="mt-auto mb-auto ml-12" matTooltip="Refresh user info"
+                            (click)="refreshUser()">
+                            refresh</mat-icon>
+                     </div>
+                    <fuse-search-bar (inputVal)='searchEmail($event)'></fuse-search-bar>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT -->
+            <div class="content" *ngIf="user">
+
+                <mat-tab-group fxLayout="column" fxFlex>
+
+                    <mat-tab label="User Details">
+
+                        <div class="order-details tab-content p-24" fusePerfectScrollbar>
+
+
+                            <div class="section pb-48">
+
+                                <div class="pb-16" fxLayout="row" fxLayoutAlign="space-between">
+                                    <div fxLayout="row">
+                                        <img class="avatar" *ngIf="user.photoURL" alt="Photo" [src]="user.photoURL | safe">
+                                        <mat-icon class="m-0 mr-16 secondary-text" *ngIf="!user.photoURL">account_circle</mat-icon>
+                                        <div class="h2 secondary-text" fxLayout="column" fxLayoutAlign="center">
+                                            {{user.name }}
+                                        </div>
+                                    </div>
+                                    <div fxLayout="row">
+                                        <button mat-button class="brown" *ngIf="user.profileScore === 100 && !user.tcfId && user.packageCount && isSuperAdmin" (click)="generateTcfId()">
+                                            <mat-icon>add_circle</mat-icon>
+                                            Generate TCF ID
+                                        </button>
+                                        <button mat-stroked-button *ngIf="user.tcfId" disabled class="fuse-black-fg">
+                                           TCF'ID : {{ user.tcfId }}
+                                        </button>
+                                    </div>
+
+                                </div>
+                                <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                                    <mat-chip-list>
+                                        <mat-chip [class.warn]="!user.tcfId" [class.accent]="user.tcfId">
+                                            <mat-icon class="m-0">
+                                                {{user.tcfId ? 'credit_card' : 'warning'}}
+                                        </mat-icon> {{user.tcfId ? 'TCF\'ID Holder' : 'No TCF ID'}}
+                                        </mat-chip>
+                                        <mat-chip class="fuse-white-fg" [class.warn]="!(user.profileScore === 100)"
+                                        [class.green]="user.profileScore === 100">
+                                            <mat-icon class="m-0">
+                                                {{user.profileScore === 100 ? 'beenhere' : 'warning'}}
+                                            </mat-icon>  Profile {{user.profileScore + '%' }} complete
+                                        </mat-chip>
+                                        <mat-chip [class.warn]="!user.isNative" [class.primary]="user.isNative">
+                                            <mat-icon class="m-0">
+                                                {{user.isNative ? 'home' : 'location_on'}}
+                                            </mat-icon> {{user.isNative ? 'Native' : 'Outside'}} Student
+                                        </mat-chip>
+                                        <mat-chip [class.warn]="!user.verified" [class.indigo]="user.verified">
+                                            <mat-icon class="m-0">
+                                                    {{user.verified ? 'verified_user' : 'warning'}}
+                                            </mat-icon>  {{user.verified ? 'Active' : 'Unverified'}}
+                                        </mat-chip>
+                                        <mat-chip class="purple" *ngIf="user.admin">
+                                            <mat-icon class="m-0">
+                                                    card_membership
+                                            </mat-icon> {{user.admin}} Admin
+                                        </mat-chip>
+                                        <mat-chip class="accent" *ngIf="user.ambassador">
+                                            <mat-icon class="m-0">
+                                                    message
+                                            </mat-icon> Campus Ambassador
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                                <div class="pb-16 w-100-p" fxLayout="column" fxLayoutAlign="start">
+                                    <div class="pb-16" fxLayout="row" fxLayoutAlign="space-between">
+                                        <div class="h2 secondary-text mt-auto mb-auto" fxLayout="column" fxLayoutAlign="start center">
+                                                {{ user.packages.length }} Packages {{ user.isNative ? '(NITP)': '(OC)'}}
+                                        </div>
+                                        <div fxLayout="column" *ngIf="isSuperAdmin">
+                                            <mat-form-field style="width: 40vw;">
+                                                <mat-select placeholder="Select Package" [(ngModel)]="packageToAdd">
+                                                    <mat-option *ngFor="let package of getPackagesToAdd()" [value]="package.id">
+                                                        {{package.name + ' for '}} {{ user.isNative ? 'NITP': 'OC'}}   {{ ' (Rs.' + package.payment[user.collegeId] +')'}}
+                                                    </mat-option>
+                                            </mat-select>
+                                            </mat-form-field>
+                                            <button mat-button [disabled]="!packageToAdd || !packageList" 
+                                            class="m-auto fuse-black" style="width: 40vw;"
+                                            (click)="addPackageToUser()"
+                                            >
+                                                    <mat-icon>add</mat-icon>
+                                                    Add Package
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="start" *ngIf="packageList && user.packages">
+                                        <mat-chip-list>
+                                            <mat-chip 
+                                            *ngFor="let package of getUserPackages()" 
+                                            [matTooltip]="package.description"
+                                            [ngClass]="package.materialClass">
+                                                <mat-icon class="m-4">
+                                                    {{ package.materialIcon }}
+                                                </mat-icon> {{ package.name }}
+                                            </mat-chip>
+                                        </mat-chip-list>
+                                    </div>
+                                </div>
+                                <table class="simple">
+                                    <thead>
+                                        <tr>
+                                            <th class="grey-fg">Name</th>
+                                            <th class="company primary-fg">{{user.name || '-'}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Email
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.email}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                UID
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.uid }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Verified
+                                            </td>
+                                            <td>
+                                                <mat-icon class="m-0 mr-16">
+                                                    {{ user.verified ? 'verified_user' : 'not_interested'}}
+                                                </mat-icon>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Admin Access
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.admin || '-'}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Phone Number
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.phoneNumber || '-'}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                College
+                                            </td>
+                                            <td>
+                                                <span class="company" *ngIf="user.isNative">
+                                                    <mat-chip-list >
+                                                        <mat-chip color="black" selected>
+                                                            <mat-icon class="m-0 mr-16">
+                                                                 home
+                                                            </mat-icon>
+                                                            Native Student
+                                                        </mat-chip>
+                                                    </mat-chip-list>
+                                                </span>
+                                                <span class="company" *ngIf="!user.isNative">
+                                                    {{ user.collegeName }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        
+                                        
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Degree
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.degree || '-'}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        
+                                        
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Roll Number
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.rollNo || '-'}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Year of Completion
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{user.yearOfCompletion || '-'}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Campus Ambassador
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.campusAmbassadorDescription }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab label="Registrations">
+                        <div class="products tab-content p-24" fusePerfectScrollbar>
+                            <div fxLayout="column" class="w-100-p mb-20">
+                                <div class="h2 secondary-text">
+                                    {{ user.registrations.solo.length}} Solo Registrations
+                                </div>
+                                <div fxLayout="column" *ngIf="user.soloRegistrationCount && userSoloRegistrationDetail">
+                                    <table class="simple" style="table-layout: auto;">
+                                        <thead>
+                                            <tr>
+                                                <th>Event Name</th>
+                                                <th>Round</th>
+                                                <th>Registered At</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let event of userSoloRegistrationDetail">
+                                                <td> <a mat-stroked-button [routerLink]="'/pages/events/' + event.eventId" 
+                                                    [class.disabled]="!findEventIdInTree(event.eventId)" 
+                                                    [disabled]="!findEventIdInTree(event.eventId)"
+                                                    >
+                                                        {{event.eventName}}
+                                                    </a></td>
+                                                    <td> {{event.round === 'winner' ? 'Winner' : event.round + 1 }}</td>
+                                                <td> {{event.registeredAt | date:'short'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div fxLayout="column" class="w-100-p mb-20">
+                                <div class="h2 secondary-text">
+                                    {{ user.registrations.team.length}} Team Registrations
+                                </div>
+                                <div  *ngIf="user.teamRegistrationCount && userTeamRegistrationDetail" class="w-100-p" style="overflow: scroll;" fusePerfectScrollbar>
+                                    <table class="simple" style="table-layout: auto;">
+                                        <thead>
+                                            <tr>
+                                                <th>Event Name</th>
+                                                <th>Round</th>
+                                                <th>Team Name</th>
+                                                <th>Team ID</th>
+                                                <th>Team Captain</th>
+                                                <th>Team Members</th>
+                                                <th>Registered At</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let event of userTeamRegistrationDetail">
+                                                <td> 
+                                                    <a mat-stroked-button [routerLink]="'/pages/events/' + event.eventId" 
+                                                    [class.disabled]="!findEventIdInTree(event.eventId)"
+                                                     [disabled]="!findEventIdInTree(event.eventId)"
+                                                    >
+                                                        {{event.eventName}}
+                                                    </a>
+                                                </td>
+                                                <td>{{ event.round === 'winner' ? 'Winner' : event.round + 1 }}</td>
+                                                <td> {{event.teamName}} </td>
+                                                <td> {{ event.teamId }} </td>
+                                                <td> 
+                                                    <a mat-stroked-button routerLink='/pages/users/profile' 
+                                                    [queryParams]="{uid : event.captainDetails.uid}"
+                                                     >
+                                                        {{event.captainDetails.name }}
+                                                    </a>
+                                                </td>
+
+                                                <td> 
+                                                    <ul *ngIf="event.memberDetails && event.memberDetails.length > 0;"
+                                                        style="list-style: none;" class="p-0">
+                                                    <li *ngFor="let member of event.memberDetails">
+                                                            <a mat-stroked-button routerLink='/pages/users/profile' 
+                                                            [queryParams]="{uid : member.uid}" class="mb-4"
+                                                            >
+                                                                {{ member.name }}
+                                                            </a>
+                                                     </li>
+                                                    </ul>
+                                                    <p *ngIf="!(event.memberDetails && event.memberDetails.length > 0)"> - </p>
+                                                </td>
+                                                <td> {{event.registeredAt | date:'short'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab label="Invoices" *ngIf="isSuperAdmin">
+
+                        <div class="tab-content p-24" fxLayout="column" fusePerfectScrollbar>
+                                    <div fxLayout="row" class="w-100-p mt-12" style="justify-content: space-between;">
+                                            <div class="h2 secondary-text mt-auto">{{userInvoiceList && userInvoiceList.length }} INVOICES</div>
+                                            <button mat-raised-button [color]="uploading ? 'disabled' : 'primary'" 
+                                            [disabled]="uploading" (click)="file.click()">{{uploading ? 'Uploading' : 'Upload New Invoice'}}</button>
+                                            <input type="file" #file style="display: none;" (input)="uploadInvoice($event)">
+                                        </div>
+                            <div class="w-100-p p-24" *ngIf="userInvoiceList && userInvoiceList.length > 0">
+                                <a *ngFor="let url of userInvoiceList; let i = index" class="m-8"
+                                mat-raised-button
+                                [href]="url" target="_blank">
+                                        <mat-icon>file_copy</mat-icon>
+                                        {{ i  + 1 }}
+                                </a>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                </mat-tab-group>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+</div>

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule, MatIconModule } from '@angular/material';
 
 import { FuseSearchBarComponent } from './search-bar.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -13,7 +14,7 @@ import { FuseSearchBarComponent } from './search-bar.component';
     imports     : [
         CommonModule,
         RouterModule,
-
+        FormsModule,
         MatButtonModule,
         MatIconModule
     ],

@@ -1,0 +1,84 @@
+@import "src/@fuse/scss/fuse";
+
+    .header {
+
+        @include media-breakpoint('xs') {
+            padding: 16px;
+        }
+
+       
+    }
+
+#order {
+
+    .header {
+
+        .subtitle {
+            margin: 6px 0 0 0;
+        }
+         .search {
+            position: relative;
+            max-width: 780px;
+
+            .search-icon {
+                margin: 0 -24px 0 0;
+            }
+
+            .search-input {
+                padding: 0 0 0 48px;
+                background: none;
+                font-size: 24px;
+                line-height: 48px;
+                height: 48px;
+                color: #FFFFFF;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+                transition: border-color 300ms ease;
+
+                &:focus {
+                    border-color: rgba(255, 255, 255, 1);
+                }
+
+                &::-webkit-input-placeholder {
+                    color: #FFFFFF;
+                }
+            }
+        }
+    }
+
+    .content {
+
+        .mat-tab-group,
+        .mat-tab-body-wrapper,
+        .tab-content {
+            flex: 1 1 auto;
+            max-width: 100%;
+        }
+
+        .tab-content {
+
+            &.products {
+
+                .product-row {
+                    cursor: pointer;
+                }
+            }
+            
+        }
+
+        .mat-tab-body-content {
+            display: flex;
+        }
+
+        .mat-tab-label {
+            height: 64px;
+        }
+
+        table {
+            table-layout: fixed;
+        }
+    }
+
+}
+a:hover {
+    text-decoration: none !important;
+}

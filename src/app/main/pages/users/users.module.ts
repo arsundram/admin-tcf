@@ -2,21 +2,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {MatButtonModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatRippleModule, MatTabsModule,
-     MatTooltipModule, MatSnackBarModule} from '@angular/material';
+     MatTooltipModule, MatSnackBarModule, MatSelectModule, MatTableModule, MatPaginatorModule, MatSortModule} from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AgmCoreModule} from '@agm/core';
 import {FuseSharedModule} from '../../../../@fuse/shared.module';
-import {FuseWidgetModule} from '../../../../@fuse/components';
+import {FuseWidgetModule, FuseSearchBarModule} from '../../../../@fuse/components';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
-import { UserListComponent } from './user-list/user-list.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { UserListGuard } from './user-list/user-list.guard';
 import { UserProfileGuard } from './user-profile/user-profile.guard';
+import { CampusAmbassadorGuard } from './campus-ambassador/campus-ambassador.guard';
+import { CampusAmbassadorComponent } from './campus-ambassador/campus-ambassador.component';
 const routes = [
     {
-        path     : 'users/list',
-        component: UserListComponent,
-        canActivate: [UserListGuard]
+        path     : 'users/campus-ambassador-program',
+        component: CampusAmbassadorComponent,
+        canActivate: [CampusAmbassadorGuard]
     },
     {
         path: 'users/profile',
@@ -28,6 +28,7 @@ const routes = [
   imports: [
     CommonModule,
       RouterModule.forChild(routes),
+      FuseSearchBarModule,
       MatIconModule,
       MatTabsModule,
       MatChipsModule,
@@ -39,14 +40,18 @@ const routes = [
       MatRippleModule,
       MatTooltipModule,
       MatSnackBarModule,
+      MatSelectModule,
       AgmCoreModule.forRoot({
           apiKey: 'AIzaSyD81ecsCj4yYpcXSLFcYU97PvRsE_X8Bx8'
       }),
       OwlDateTimeModule,
       OwlNativeDateTimeModule,
       FuseSharedModule,
-      FuseWidgetModule
-  ],
-  declarations: [ UserProfileComponent, UserListComponent]
+      FuseWidgetModule,
+      MatTableModule,
+      MatPaginatorModule,
+      MatSortModule,
+      ],
+  declarations: [ UserProfileComponent, CampusAmbassadorComponent]
 })
 export class UsersModule { }

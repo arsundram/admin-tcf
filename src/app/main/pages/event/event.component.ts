@@ -3,8 +3,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {ActivatedRoute} from '@angular/router';
 import {EventEditService} from './event-edit.service';
-import { MatSnackBar } from '@angular/material';
-
+import { PageService } from '../pages.service';
+import { PackageMaterialClasses, PackageMaterialIcons } from '../users/user.model';
 @Component({
   selector: 'app-event',
   templateUrl: './event.component.html',
@@ -22,12 +22,14 @@ export class EventComponent implements OnInit {
     poster;
     eventId;
     uploading = false;
+    packageClasses = PackageMaterialClasses;
+    packageIcons = PackageMaterialIcons;
     eventForm = new FormGroup({
         'description': new FormControl('', [Validators.required, Validators.minLength(40), Validators.maxLength(400)]),
         'startsAt': new FormControl('', Validators.required),
         'endsAt': new FormControl('', Validators.required),
     });
-  constructor(private route: ActivatedRoute, private eventEditService: EventEditService, private snackBar: MatSnackBar) {
+  constructor(private route: ActivatedRoute, private eventEditService: EventEditService, private pageService: PageService) {
       this.route.params.subscribe(params => {
           this.eventId = params['id'];
           this.notificationBody = '';
@@ -41,6 +43,9 @@ export class EventComponent implements OnInit {
                 });
                 } else {
                     this.posterURL = null;
+             }
+             if (!this.eventDetail.children && !res.rounds) {
+                this.eventDetail.rounds = [];
              }
              if (this.eventDetail.rounds) {
                  this.eventDetail.rounds.forEach(round => {
@@ -66,7 +71,7 @@ export class EventComponent implements OnInit {
         }
       this.eventForm.controls['description'].setValue(eventDetail.description);
        this.eventForm.controls['startsAt'].setValue(new Date(eventDetail.startsAt));
-      this.eventForm.controls['endsAt'].setValue(new Date(eventDetail.startsAt));
+      this.eventForm.controls['endsAt'].setValue(new Date(eventDetail.endsAt));
 
       console.log(this.eventForm.value);
   }
@@ -137,10 +142,8 @@ export class EventComponent implements OnInit {
   }
   updateDescription() {
       if (!this.eventForm.valid) {
-        this.snackBar.open('The description should be between 40 to 400 characters! Please ensure you have have selected valid date!', null , {
-            duration: 2000,
-            panelClass: 'error'
-        });
+        this.openSnackBar('The description should be between 40 to 400 characters! Please ensure you have have selected valid date!');
+            
         return ;
       }
       const data = Object.assign(this.eventForm.value);
@@ -183,9 +186,18 @@ export class EventComponent implements OnInit {
             this.openSnackBar('Poster updated');
         });
     }
+    updatePortalTimings() {
+        const startsAt = new Date(this.eventDetail.registrationDetail.startsAt).getTime();
+        const endsAt = new Date(this.eventDetail.registrationDetail.endsAt).getTime();
+        this.eventEditService.updatePortal(this.eventId, startsAt, endsAt)
+        .then(() => {
+            this.openSnackBar('Portal Timings updated');
+        })
+        .catch(e => {
+            this.openSnackBar(e && e.message);
+        });
+    }
     openSnackBar(message) {
-        return this.snackBar.open(message, null , {
-                duration: 2000,
-            });
+        return this.pageService.openSnackBar(message);
     }
 }

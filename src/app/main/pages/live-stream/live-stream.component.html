@@ -1,0 +1,98 @@
+<div id="orders" class="page-layout carded fullwidth inner-scroll">
+
+        <div class="top-bg accent"></div>
+        <div class="center">
+             <div class="header accent"
+                 fxLayout="column" fxLayoutAlign="center center"
+                 >
+                <div fxLayout="row" fxLayoutAlign="space-between" class="w-100-p mt-16 mb-24">
+                <div class="logo"
+                     fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="logo-icon mr-16">
+                            video_call
+                    </mat-icon>
+                    <span class="logo-text h1">Live Streams</span>
+                </div>
+              
+                </div>
+            </div>
+            <!-- / HEADER -->
+    
+            <!-- CONTENT CARD -->
+            <div class="content-card" *ngIf="streams" fusePerfectScrollbar>
+                <div class="w-100-p">
+                <div class="w-100-p" *ngFor="let stream of streams; let i = index" fxLayout="column" fxLayoutAlign="center">
+                    <div class="w-100-p p-32">
+                        <mat-form-field class="w-100-p">
+                                <mat-label class="accent-fg">Title</mat-label>
+                                <input type="text" matInput
+                                            [(ngModel)]="stream.title"
+                                            >
+                            </mat-form-field>
+                    </div>
+                    <div class="w-100-p p-32">
+                        <mat-form-field class="w-100-p">
+                            <mat-label class="accent-fg">Description</mat-label>
+                            <textarea matInput
+                                        [(ngModel)]="stream.description"
+                                        rows="5"></textarea>
+                        </mat-form-field>
+                   </div>
+                   <div class="w-100-p p-32">
+                        <mat-form-field class="w-100-p">
+                            <mat-label class="accent-fg">Embed Code</mat-label>
+                            <input type="text" matInput
+                                        [(ngModel)]="stream.script"
+                                        >
+                        </mat-form-field>
+                   </div>
+                    <div class="w-100-p pl-12 pr-12 mb-12 h-60" fxLayout="row">
+                        <div class="w-40-p" fxLayout="column">
+                            <div class="w-100-p teal-fg">Starts At</div>
+                            <div class="w-100-p" fxLayout="row">
+                                <span [owlDateTimeTrigger]="dt1">
+                                <mat-icon _ngcontent-c56="" class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                    calendar_today
+                                </mat-icon>
+                                </span>
+                                <input [owlDateTime]="dt1" [(ngModel)]="stream.startsAt" hidden>
+                                <p>{{stream.startsAt | date:'short'}}</p>
+                                <owl-date-time #dt1 [pickerMode]="'dialog'"></owl-date-time>
+                            </div>                            
+                        </div>
+                        <div class="w-40-p" fxLayout="column">
+                            <div class="w-100-p warn-fg">
+                                Ends At
+                            </div>
+                            <div class="w-100-p" fxLayout="row">
+                                <span [owlDateTimeTrigger]="dt2">
+                                <mat-icon class="secondary-text s-32 mat-icon material-icons" role="img" aria-hidden="true">
+                                    calendar_today
+                                </mat-icon>
+                                    </span>
+                                <input [owlDateTime]="dt2" [(ngModel)]="stream.endsAt" hidden>
+                                <p>{{stream.endsAt | date:'short'}}</p>
+                                <owl-date-time #dt2 [pickerMode]="'dialog'"></owl-date-time>
+                            </div>
+                        </div>
+                        <div class="w-20-p" fxLayout="column" fxLayoutAlign="center">
+                            <button mat-button (click)="deleteStream(i)" >
+                                <mat-icon class="secondary-text s-32 mat-icon material-icons" >delete_forever</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="w-100-p pt-20 pl-20 pr-20" fxLayout="row" fxLayoutAlign="space-between">
+                    <button mat-raised-button (click)="addStream()" class="primary p-4 h-36">
+                            <mat-icon class="secondary-text s-32 mat-icon material-icons mr-12">add_circle_outline</mat-icon>
+                            Add New Stream
+                    </button>
+                    <button mat-raised-button (click)="saveStreams()" style="align-items: stretch;" class="accent p-4 h-36">
+                                <mat-icon class="secondary-text s-32 mat-icon material-icons mr-12">save</mat-icon>
+                                Save Streams
+                    </button>
+                </div>
+            </div>   
+     </div>
+</div>

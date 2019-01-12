@@ -1,0 +1,203 @@
+<div id="dashboard-analytics" class="page-layout blank" *ngIf="loaded">
+
+    <div class="main-widget">
+        <div class="h2 p-12 teal fuse-white-fg" fxLayout="row" fxLayoutAlign="center">
+            <p> Fest Analytics </p>
+      
+        </div>
+        <div class="position-relative p-24 indigo"
+             fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start">
+                <span class="h2">Last Sign-ins</span>
+            </div>
+        </div>
+
+        <div class="position-relative h-400 pb-16 indigo">
+            <canvas baseChart
+                    [datasets]="signedInGraph.signInDataSet"
+                    [labels]="signedInGraph.signInLabels"
+                    [colors]="analyticsOptions.mainGraph.colors"
+                    [options]="analyticsOptions.mainGraph.options"
+                    [chartType]="'line'">
+            </canvas>
+        </div>
+
+    </div>
+
+    <div class="main-widget">
+        <div class="position-relative p-24 "
+             fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start">
+                <span class="h2">Last Sign-ups</span>
+            </div>
+        </div>
+
+        <div class="position-relative h-400 pb-16 ">
+            <canvas baseChart
+                    [datasets]="signedUpGraph.creationDataSet"
+                    [labels]="signedUpGraph.signUpLabels"
+                    [colors]="analyticsOptions.secondGraph.colors"
+                    [options]="analyticsOptions.secondGraph.options"
+                    [chartType]="'line'">
+            </canvas>
+        </div>
+
+    </div>
+    <div class="main-widget pb-96 fuse-white-fg" style="background-color: #7b00d4">
+            <div class="position-relative p-24 "
+            fxLayout="row" fxLayoutAlign="space-between center">
+           <div fxLayout="column" fxLayoutAlign="start start">
+               <span class="h2">User Analytics</span>
+           </div>
+       </div>
+        <div class="position-relative h-400 pb-16">
+            <canvas baseChart
+            [datasets]="otherUseAnalytics.datasets"
+            [labels]="otherUseAnalytics.labels"
+            [options]="analyticsOptions.mainGraph.options"
+            [colors]="analyticsOptions.thirdGraph.colors"
+           [chartType]="'bar'" >
+
+            </canvas>
+        </div>
+    </div>
+    <div class="main-widget pt-16 pb-32">
+            <div class="position-relative p-24"
+            fxLayout="row" fxLayoutAlign="space-between center">
+           <div fxLayout="column" fxLayoutAlign="start start">
+               <span class="h2">Event Analytics</span>
+           </div>
+       </div>
+        <div class="position-relative h-400 pb-16">
+            <canvas baseChart
+            [datasets]="eventAnalytics.datasets"
+            [labels]="eventAnalytics.labels"
+           [chartType]="'radar'"
+           [options]="{legend: {display: false}}"
+            >
+
+            </canvas>
+        </div>
+    </div>
+    <div class="main-widget pt-64 fuse-white-bg">
+            <div class="position-relative p-24 "
+            fxLayout="row" fxLayoutAlign="space-between center">
+           <div fxLayout="column" fxLayoutAlign="start start">
+               <span class="h2">Packages</span>
+           </div>
+       </div>
+       <div class="w-100-p" fxLayout="row">
+           <div class="w-50-p">
+               <div class="position-relative h-2 p-24">
+                   Other Colleges
+               </div>
+                <div class="position-relative h-400 pb-16">
+                        <canvas baseChart
+                        [datasets]="packageAnalyticsOther.datasets"
+                        [labels]="packageAnalyticsOther.labels"
+                       [chartType]="'radar'" 
+                       [colors]="analyticsOptions.fifthGraph.colors"
+                       [options]="analyticsOptions.fifthGraph.options"
+
+                       >
+            
+                        </canvas>
+                    </div>
+           </div>
+           <div class="w-50-p">
+                <div class="position-relative h-2 p-24">
+                        Native
+                    </div>
+                <div class="position-relative h-400 pb-16">
+                        <canvas baseChart
+                        [datasets]="packageAnalyticsNative.datasets"
+                        [labels]="packageAnalyticsNative.labels"
+                       [chartType]="'radar'" 
+                       [colors]="analyticsOptions.fifthGraph.colors"
+                       [options]="analyticsOptions.fifthGraph.options"
+
+                       >
+            
+                        </canvas>
+                    </div>
+           </div>
+       </div>
+
+    </div>
+    <div class="content w-100-p" fxLayout="column">
+        <div class="w-100-p pb-16">
+            <div class="h1 w-100-p p-4 text-center">Winner Declarations</div>
+            <div class="w-100-p" fxLayout="row">
+                <div class="w-50-p">
+                    <div class="h2 text-center w-100-p">Solo Winners</div>
+                        <mat-table class="orders-table"
+                           #table [dataSource]="soloWinners"
+                           fusePerfectScrollbar>
+    
+                    <!-- SNo Column -->
+                    <ng-container matColumnDef="Event ID">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Event ID</mat-header-cell>
+                        <mat-cell *matCellDef="let el">
+                            {{el.eventId}}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="No. of Winners">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Winners</mat-header-cell>
+                            <mat-cell *matCellDef="let el">
+                                {{el.count}}
+                            </mat-cell>
+                        </ng-container>
+                    <mat-header-row *matHeaderRowDef="['Event ID', 'No. of Winners']"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: ['Event ID', 'No. of Winners']"
+                             matRipple
+                             >
+                    </mat-row>
+                        </mat-table>
+                   
+                </div>
+                <div class="w-50-p p-4">
+                        <div class="h2 text-center w-100-p">Team Winnings</div>
+                        <mat-table 
+                        #table [dataSource]="teamWinners"
+                        fusePerfectScrollbar>
+ 
+                 <!-- SNo Column -->
+                 <ng-container matColumnDef="Event ID">
+                     <mat-header-cell *matHeaderCellDef mat-sort-header>Event ID</mat-header-cell>
+                     <mat-cell *matCellDef="let el">
+                         {{el.eventId}}
+                     </mat-cell>
+                 </ng-container>
+                 <ng-container matColumnDef="No. of Winners">
+                         <mat-header-cell *matHeaderCellDef mat-sort-header>Winners</mat-header-cell>
+                         <mat-cell *matCellDef="let el">
+                             {{el.count}}
+                         </mat-cell>
+                     </ng-container>
+                 <mat-header-row *matHeaderRowDef="['Event ID', 'No. of Winners']"></mat-header-row>
+                 <mat-row *matRowDef="let row; columns: ['Event ID', 'No. of Winners']"
+                          matRipple
+                          >
+                 </mat-row>
+                     </mat-table>
+                </div>
+            </div>
+        </div>
+        <div class="w-100-p" fxLayout="row">
+            <div class="w-50-p p-16">
+                <mat-card class="pb-36">
+                    <mat-card-header class="h1 primary-fg" fxLayout="row" fxLayoutAlign="center">Upcoming Event</mat-card-header>
+                    <mat-card-content  class="h2 text-center accent-fg">{{upcomingEvent.name}}</mat-card-content>
+                    <mat-card-footer class="text-center ">{{upcomingEvent.time | date:'short'}}</mat-card-footer>
+                </mat-card>
+            </div>
+            <div class="w-50-p p-16">
+                    <mat-card class="pb-36">
+                            <mat-card-header class="h1 primary-fg" fxLayout="row" fxLayoutAlign="center">Upcoming Portal Opening</mat-card-header>
+                            <mat-card-content class="h2 text-center accent-fg">{{upcomingPortal.name}}</mat-card-content>
+                            <mat-card-footer class="text-center">{{upcomingPortal.time | date:'short'}}</mat-card-footer>
+                        </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
