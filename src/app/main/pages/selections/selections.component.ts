@@ -10,6 +10,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { User } from '../users/user.model';
 import { MatSort, MatPaginator } from '@angular/material';
+import { ExcelService } from '@fuse/services/excel.service';
 
 @Component({
     selector   : 'app-selections',
@@ -61,7 +62,8 @@ export class SelectionsComponent implements OnInit, OnDestroy
         private selectionService: SelectionsService,
         private route: ActivatedRoute,
         private pageService: PageService,
-        private splashScreen: FuseSplashScreenService
+        private splashScreen: FuseSplashScreenService,
+        private excelService: ExcelService
     )
     {
         
@@ -422,6 +424,83 @@ export class SelectionsComponent implements OnInit, OnDestroy
     }
     dateCompare(a, b) {
         return a.getTime() - b.getTime();
+    }
+    exportExcel() {
+        if(this.round !== null) {
+        if (this.type === 'team') {
+            if (this.round !== 'winner') {
+                this.excelService.exportAsExcelFile(
+                    this.exportTeamExcel(this.selections),
+                 `Round ${this.round + 1} ${this.eventInfo && this.eventInfo.name}`);
+            } else if (this.round === 'winner') {
+                this.excelService.exportAsExcelFile(
+                    this.exportTeamExcel(this.selections),
+                 `Winners ${this.eventInfo && this.eventInfo.name}`);
+            }
+        } else if (this.type === 'solo') {
+            if (this.round !== 'winner') {
+                this.excelService.exportAsExcelFile(
+                    this.exportSoloExcel(this.selections),
+                 `Round ${this.round + 1} ${this.eventInfo && this.eventInfo.name}`);
+            } else {
+                this.excelService.exportAsExcelFile(
+                    this.exportSoloExcel(this.selections),
+                 `Winners ${this.eventInfo && this.eventInfo.name}`);
+            }
+        }
+    }
+    }
+    exportTeamExcel(selections) {
+        return selections.map(selection => {
+            const format =  (<{
+                 memberDetails: {
+                     name: any,
+                     uid: any,
+                 }[],
+                 captainDetails: {
+                     name: string,
+                     uid: string,
+                 },
+                 registeredAt: Date,
+                 id: string,
+                 name: string
+             }>selection);
+             const formatReturn = {
+                 'Registered At': format.registeredAt,
+                 'Captain Name': format.captainDetails,
+                 'Team ID': format.id,
+                 'Team Name': format.name
+             };
+             format.memberDetails.forEach((member, i) => {
+                 formatReturn['Member ' + i + ' Name'] = member.name; 
+             });
+             return formatReturn;
+         });
+    }
+    exportSoloExcel(selections) {
+       return selections.map(selection => {
+        const format = (<{
+            user: User,
+            registeredAt: Date
+        }>selection);
+        return {
+            'Registered At': format.registeredAt,
+            'Name': format.user.name,
+            'TCF ID': this.formatNull(format.user.tcfId),
+            'Email': format.user.email,
+            'Roll No.': format.user.rollNo,
+            'College': format.user.collegeName,
+            'Year of Completion': this.formatNull(format.user.yearOfCompletion),
+            'Branch': this.formatNull(format.user.branch)
+        };
+       });
+
+    }
+    formatNull(stringVariable) {
+        if (!stringVariable) {
+            return '-';
+        }
+        return stringVariable;
     }
 
 }

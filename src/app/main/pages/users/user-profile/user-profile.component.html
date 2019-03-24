@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div fxLayout="row">
-                                        <button mat-button class="brown" *ngIf="user.profileScore === 100 && !user.tcfId && user.packageCount && isSuperAdmin" (click)="generateTcfId()">
+                                        <button mat-button class="brown" *ngIf="!user.tcfId && user.packageCount && isSuperAdmin" (click)="generateTcfId()">
                                             <mat-icon>add_circle</mat-icon>
                                             Generate TCF ID
                                         </button>
@@ -197,18 +197,22 @@
                                                 College
                                             </td>
                                             <td>
-                                                <span class="company" *ngIf="user.isNative">
-                                                    <mat-chip-list >
+                                                <span class="company">
+                                                    <mat-chip-list>
                                                         <mat-chip color="black" selected>
-                                                            <mat-icon class="m-0 mr-16">
-                                                                 home
+                                                            <mat-icon class="m-0">
+                                                                 {{user.isNative ? 'home' : 'card_travel'}}
                                                             </mat-icon>
-                                                            Native Student
+                                                            {{ user.isNative ? 'Native Student' : user.collegeName }}
                                                         </mat-chip>
                                                     </mat-chip-list>
-                                                </span>
-                                                <span class="company" *ngIf="!user.isNative">
-                                                    {{ user.collegeName }}
+                                                    <app-change-user-college *ngIf="editCollege" 
+                                                    (changeCollegeEmit)="changeUserCollege($event)"
+                                                     [collegeName]="user.collegeName" [collegeId]="user.collegeId">
+                                                    </app-change-user-college>
+                                                    <button mat-raised-button *ngIf="isSuperAdmin" [class.warn]="editCollege" [class.teal]="!editCollege" (click)="editCollege = !editCollege">
+                                                        {{ editCollege ? 'Cancel' : 'Change' }}
+                                                    </button>
                                                 </span>
                                             </td>
                                         </tr>
@@ -225,7 +229,17 @@
                                             </td>
                                         </tr>
                                         
-                                        
+                                        <tr>
+                                            <td class="grey-fg">
+                                                Branch
+                                            </td>
+                                            <td>
+                                                <span class="company">
+                                                    {{ user.branch || '-'}}
+                                                </span>
+                                            </td>
+                                        </tr>
+
                                         <tr>
                                             <td class="grey-fg">
                                                 Roll Number

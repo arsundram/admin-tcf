@@ -84,12 +84,10 @@ export class UserService {
                     }
                  }
              }).then(() => {
-                return this.afDb.database.ref('tcf-id-count/' + user.collegeId).transaction((count) => {
-                    return count ? ++count : 1;
-                }, e => e).then(res => res.snapshot.val());
-             }).then(count => {
-                const tcfId = 'TCF' + (user.isNative ? 'NITP' : 'OC') + count;
-                return this.afDb.database.ref('users/' + user.uid + '/tcfId').set(tcfId).then(() => tcfId);
+                 const uniqueTcfIdsubstring = Math.random().toString(36).substring(7, 11).toUpperCase() 
+                                            + Math.random().toString(36).substring(7, 11).toUpperCase();
+                const tcfId = 'TCF' + (user.isNative ? 'NITP' : 'OC') + uniqueTcfIdsubstring;
+                return tcfId;
              }).then((tcfId) => {
                  const ref = this.afDb.database.ref('tcf-id-mapping/' + user.collegeId + '/' + tcfId);
                 return ref
@@ -98,9 +96,11 @@ export class UserService {
                         throw new Error('FATAL!!THE TCF ID IS TAKEN BY ANOTHER USER');
                     }
                 }).then(() => {
-                    return ref.set(user.uid).then(() => tcfId);
+                    return ref.set(user.uid).then(() => tcfId).then(() => tcfId);
                 });
-            });
+            }).then(tcfId => {
+                return this.afDb.database.ref('users/' + user.uid + '/tcfId').set(tcfId).then(() => tcfId);
+             });
          }
          addPackageToUser(uid, packageId) {
              if (uid === null || packageId === null) {
@@ -151,6 +151,11 @@ export class UserService {
                             return new Package({id, ...list[id]});
                         });
                     });
+         }
+         changeUserCollge(uid, collegeName, collegeId) {
+             return this.afDb.database.ref('users/' + uid).update({
+                collegeName, collegeId
+             });
          }
 
           success(res) {

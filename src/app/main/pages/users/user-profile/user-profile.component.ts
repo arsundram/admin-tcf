@@ -45,6 +45,7 @@ import { AuthService } from '@fuse/services/auth.service';
         eventTree = null;
         isSuperAdmin = null;
     userInvoiceList: Array<string> = null;
+    editCollege = false;
     constructor(private route: ActivatedRoute, 
         private userService: UserService,
          private splashScreen: FuseSplashScreenService,
@@ -126,7 +127,7 @@ import { AuthService } from '@fuse/services/auth.service';
         });
     }
     generateTcfId() {
-        if (this.user && this.user.profileScore === 100 && this.user.packageCount) {
+        if (this.user && this.user.packageCount) {
             this.splashScreen.show();
             return this.userService.generateTcfId(this.user).then(tcfId => {
                 this.user.updateUser({tcfId});
@@ -137,7 +138,7 @@ import { AuthService } from '@fuse/services/auth.service';
                 this.splashScreen.hide();
             });
         } else {
-            this.pageService.openSnackBar('Profile Score should be 100% and atleast 1 package should be added to user first');
+            this.pageService.openSnackBar('atleast 1 package should be added to user first');
         }
     }
 
@@ -162,6 +163,27 @@ import { AuthService } from '@fuse/services/auth.service';
       return Promise.all(this.user.registrations.team.map(teamDetail => {
         return this.eventService.findEventNameAndTeamDetail(teamDetail.eventId, teamDetail.teamId, teamDetail.round, this.user.uid);
       }));
+  }
+  changeUserCollege(e) {
+      const newCollegeName = e.collegeName;
+      const newCollegeId = e.collegeId;
+      if (newCollegeId === this.user.collegeId && newCollegeName === this.user.collegeName) {
+          return;
+      }
+      this.splashScreen.show();
+      return this.userService.changeUserCollge(this.user.uid, newCollegeName, newCollegeId)
+            .then(() => {
+                this.user.collegeId = newCollegeId;
+                this.user.collegeName = newCollegeName;
+                this.editCollege = false;
+            })
+            .catch((err) => {
+                this.pageService.openSnackBar(err && err.message);
+            })
+            .then(() => {
+                this.splashScreen.hide();
+            });
+
   }
   addPackageToUser() {
       const packageId = this.packageToAdd;

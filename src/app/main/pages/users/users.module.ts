@@ -12,6 +12,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserProfileGuard } from './user-profile/user-profile.guard';
 import { CampusAmbassadorGuard } from './campus-ambassador/campus-ambassador.guard';
 import { CampusAmbassadorComponent } from './campus-ambassador/campus-ambassador.component';
+import { CHangeUserCollegeComponent } from './user-profile/change-user-college/change-user-college.component';
 const routes = [
     {
         path     : 'users/campus-ambassador-program',
@@ -52,6 +53,6 @@ const routes = [
       MatPaginatorModule,
       MatSortModule,
       ],
-  declarations: [ UserProfileComponent, CampusAmbassadorComponent]
+  declarations: [ UserProfileComponent, CampusAmbassadorComponent, CHangeUserCollegeComponent]
 })
 export class UsersModule { }

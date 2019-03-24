@@ -1,0 +1,12 @@
+<div *ngIf="collegeName && collegeId" fxLayout="column">
+    <mat-form-field class="m-16">
+        <input matInput type="text" [(ngModel)]="newCollegeName" [disabled]="newCollegeId === 'nitp'">
+    </mat-form-field>
+    <mat-select [placeholder]="'Type'" [(ngModel)]="newCollegeId" (selectionChange)="checkCollegeName()" class="m-16">
+        <mat-option [value]="'nitp'">Native</mat-option>
+        <mat-option [value]="'other'">Outsider</mat-option>
+    </mat-select>
+    <button mat-raised-button (click)="changeCollege()" class="m-16 success">
+        Change College
+    </button>
+</div>

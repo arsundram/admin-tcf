@@ -1,3 +1,4 @@
+import { ExcelService } from '@fuse/services/excel.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen.service';
 import { MatSort } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
@@ -22,7 +23,8 @@ import { UserService } from '../user.service';
       currentPage = 0;
       currentPageSize = 50;
       @ViewChild(MatSort) sort: MatSort;
-    constructor(private userService: UserService, private pageService: PageService, private splash: FuseSplashScreenService) {
+    constructor(private userService: UserService, private pageService: PageService, 
+        private splash: FuseSplashScreenService, private excelService: ExcelService) {
         this.splash.show();
         this.userService.getCampusAmbassadorList().then(res => {
             this.allCampusAmbassadors = Object.keys(res).map(k => {
@@ -39,26 +41,41 @@ import { UserService } from '../user.service';
         switch (e.active) {
             case 'points':
             this.allCampusAmbassadors.sort((a, b) => {
+                if (a.points === null || b.points === null) {
+                    return 0;
+                }
                 return a.points - b.points;
             });
             break;
             case 'name':
             this.allCampusAmbassadors.sort((a, b) => {
+                if (!(a.name && b.name)) {
+                    return 0;
+                }
                 return a.name.localeCompare(b.name);
             });
             break;
             case 'collegeName':
             this.allCampusAmbassadors.sort((a, b) => {
+                if (!(a.collegeName && b.collegeName)) {
+                    return 0;
+                }
                 return a.collegeName.localeCompare(b.collegeName);
             });
             break;
             case 'email':
             this.allCampusAmbassadors.sort((a, b) => {
+                if (!(a.email && b.email)) {
+                    return 0;
+                }
                 return a.email.localeCompare(b.email);
             });
             break;
             case 'native':
             this.allCampusAmbassadors.sort((a, b) => {
+                if (!(a.collegeId && b.collegeId)) {
+                    return 0;
+                } 
                return  a.collegeId === 'nitp' ? 1 : b.collegeId === 'nitp' ? -1 : 0 ;
             });
             break;
@@ -100,4 +117,16 @@ import { UserService } from '../user.service';
             // this.filteredCampusAmbassadors.next(newFilter);
         }
     }
+    exportAsExcel() {
+        this.excelService.exportAsExcelFile(this.allCampusAmbassadors.map(campusAmbassador => {
+            return {
+                email: campusAmbassador.email,
+                name: campusAmbassador.name,
+                collegeName:  campusAmbassador && campusAmbassador.collegeName,
+                points:  campusAmbassador && campusAmbassador.points,
+                isNativeStudent: campusAmbassador.collegeId === 'nitp' ? true : false
+            };
+        }), 'Campus Ambassador List');
+    }
+
   }

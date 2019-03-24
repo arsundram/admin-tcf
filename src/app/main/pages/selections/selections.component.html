@@ -21,6 +21,9 @@
                     </mat-icon>
                     <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">{{eventInfo.name}}</span>
                 </div>
+                <button mat-raised-button (click)="exportExcel()">
+                    Export Excel
+                </button>
                 <mat-menu #appMenu="matMenu">
                 <button mat-menu-item *ngFor="let round of eventInfo.rounds; let i = index" (click)="changeRound(i)"> Round {{ i + 1 }}</button>
                 <button mat-menu-item (click)="showWinners()"> Winners</button>

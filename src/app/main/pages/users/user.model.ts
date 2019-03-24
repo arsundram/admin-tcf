@@ -42,14 +42,13 @@ export class User {
                 [
                 'name', 'email', 'verified', 'branch', 'rollNo',
                 'degree', 'collegeName', 'yearOfCompletion',
-                 'phoneNumber', 'photoURL', 'uid',
+                 'phoneNumber', 'uid',
                 ]
                 .indexOf(key) !== -1
              && this[key]) {
-                score += 9;
+                score += 10;
             }
         });
-        if (score === 99) { score++; }
         return score;
     }
     get isNative() {
@@ -77,6 +76,9 @@ export class User {
         //     }
         // });
         Object.assign(this, obj);
+        if (!this.collegeName) {
+            this.collegeName = ' ';
+        }
         const teamReg = (obj && obj.registrations && obj.registrations.team);
         const soloReg = (obj && obj.registrations && obj.registrations.solo);
         if (teamReg) {

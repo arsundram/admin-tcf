@@ -40,8 +40,8 @@
     "@ngx-translate/core": "10.0.2",
     "@swimlane/dragula": "3.7.3",
     "@swimlane/ngx-charts": "9.0.0",
-    "@swimlane/ngx-datatable": "file:node_modules/@swimlane/ngx-datatable",
     "@swimlane/ngx-dnd": "5.0.6",
+    "@swimlane/ngx-datatable": "14.0.0",
     "@types/prismjs": "1.9.0",
     "angular-calendar": "0.25.2",
     "angular-in-memory-web-api": "0.6.1",
@@ -49,6 +49,7 @@
     "classlist.js": "1.1.20150312",
     "core-js": "2.5.7",
     "d3": "5.7.0",
+    "file-saver": "2.0.0",
     "firebase": "5.6.0",
     "hammerjs": "2.0.8",
     "lodash": "4.17.10",
@@ -63,6 +64,7 @@
     "rxjs": "6.2.2",
     "rxjs-compat": "6.2.2",
     "web-animations-js": "2.3.1",
+    "xlsx": "0.14.1",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
