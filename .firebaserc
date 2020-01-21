@@ -1,5 +1,14 @@
 {
   "projects": {
-    "default": "corona-19"
+    "default": "sac-nit-patna-69299"
+  },
+  "targets": {
+    "sac-nit-patna-69299": {
+      "hosting": {
+        "admin-firebase-3160e": [
+          "sac-nit-patna-69299"
+        ]
+      }
+    }
   }
 }

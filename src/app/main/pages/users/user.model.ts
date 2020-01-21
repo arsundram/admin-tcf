@@ -52,7 +52,7 @@ export class User {
         return score;
     }
     get isNative() {
-        return !!(this.collegeId === 'nitp');
+        return !!(this.collegeId === 'nitp' || this.collegeName === 'National Institute Of Technology Patna');
     }
     get campusAmbassadorDescription() {
         return this.ambassador ? this.ambassador['rank'] 
