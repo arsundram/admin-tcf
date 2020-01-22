@@ -107,7 +107,7 @@
                                             <mat-form-field style="width: 40vw;">
                                                 <mat-select placeholder="Select Package" [(ngModel)]="packageToAdd">
                                                     <mat-option *ngFor="let package of getPackagesToAdd()" [value]="package.id">
-                                                        {{package.name + ' for '}} {{ user.isNative ? 'NITP': 'OC'}}   {{ ' (Rs.' + package.payment[user.collegeId] +')'}}
+                                                        {{package.name + ' for '}} {{ user.isNative ? 'NITP': 'OC'}}   {{ ' (Rs.' + package.payment[user.isNative ? 'nitp': 'other'] +')'}}
                                                     </mat-option>
                                             </mat-select>
                                             </mat-form-field>
